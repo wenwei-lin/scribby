@@ -56,14 +56,14 @@ export default function LoginPage() {
             <div className="space-y-4 mb-6">
               <Input
                 type="text"
-                placeholder="用户名/手机号/邮箱"
+                placeholder="请输入邮箱"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 className="h-12 bg-gray-50 border-0 rounded-xl"
               />
               <Input
                 type="password"
-                placeholder="密码"
+                placeholder="请输入密码"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="h-12 bg-gray-50 border-0 rounded-xl"
