@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { getRandomQuestions } from "./util";
+import { generateFreeWritingQuestion } from "./action";
 
 export default function FreeWritingQuestion() {
   const [questions, setQuestions] = useState<string[]>([]);
@@ -31,7 +32,7 @@ export default function FreeWritingQuestion() {
     }));
   };
 
-  const handleGenerate = () => {
+  const handleGenerate = async () => {
     // 构建问题+回答的JSON
     const result = questions.map((question, index) => ({
       question,
@@ -39,7 +40,9 @@ export default function FreeWritingQuestion() {
     }));
 
     console.log("问题+回答JSON:", JSON.stringify(result, null, 2));
-    alert("生成写作主题，请查看控制台输出的JSON数据");
+    // alert("生成写作主题，请查看控制台输出的JSON数据");
+
+    await generateFreeWritingQuestion(result);
   };
 
   return (
