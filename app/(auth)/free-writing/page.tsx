@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { ArrowLeft } from "lucide-react"
 import Link from "next/link"
 
-export default function FreeWriting() {
+export default function FreeWritingQuestion() {
   const [answers, setAnswers] = useState({
     motivation: "",
     method: "",
