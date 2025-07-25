@@ -19,11 +19,11 @@ export default function LoginPage() {
     <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
       <div className="flex max-w-6xl w-full bg-white rounded-3xl shadow-2xl overflow-hidden">
         {/* 左侧图片区域 */}
-        <div className="flex-1 relative bg-gradient-to-br from-blue-100 to-blue-200 flex items-center justify-center p-8">
+        <div className="flex-1 relative  flex items-center justify-center p-8">
           <div className="relative">
             <div className="w-80 h-80 bg-black rounded-3xl overflow-hidden shadow-xl">
               <Image
-                src="/images/children-writing.jpg"
+                src="/logo.png"
                 alt="Children writing together"
                 width={320}
                 height={320}
@@ -34,17 +34,8 @@ export default function LoginPage() {
         </div>
 
         {/* 右侧登录区域 */}
-        <div className="flex-1 p-12 flex flex-col justify-center">
+        <div className="flex-1 p-12 py-48 flex flex-col justify-center">
           <div className="max-w-md mx-auto w-full">
-            {/* Logo和标题 */}
-            <div className="text-center mb-8">
-              <div className="w-16 h-16 bg-yellow-200 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-2xl">✏️</span>
-              </div>
-              <h1 className="text-3xl font-bold text-gray-800 mb-2">写作小能手</h1>
-              <p className="text-gray-600">笔尖生花，等你开启！</p>
-            </div>
-
             {/* 登录表单 */}
             <div className="space-y-4 mb-6">
               <Input
@@ -70,21 +61,6 @@ export default function LoginPage() {
               登录 <ArrowRight className="ml-2 w-4 h-4" />
             </Button>
 
-            {/* 其他登录方式 */}
-            <div className="mt-8">
-              <p className="text-center text-gray-500 mb-4">其他登录方式</p>
-              <div className="flex justify-center space-x-4">
-                <div className="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center cursor-pointer hover:bg-yellow-200 transition-colors">
-                  <span className="text-xl">🌟</span>
-                </div>
-                <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center cursor-pointer hover:bg-blue-200 transition-colors">
-                  <span className="text-xl">🔔</span>
-                </div>
-                <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center cursor-pointer hover:bg-red-200 transition-colors">
-                  <span className="text-xl">📱</span>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </div>
