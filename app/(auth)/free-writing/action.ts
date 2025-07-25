@@ -18,12 +18,15 @@ export const generateFreeWritingQuestion = async (
     .map((answer) => `- ${answer.question}: ${answer.answer}`)
     .join("\n")}
   `;
+  console.log(prompt)
 
   const { object } = await generateObject({
     model: AzureOpenAI("gpt-4o"),
     prompt,
     schema: FreeWritingQuestionSchema,
   });
+
+  console.log(JSON.stringify(object));
 
   return object;
 };
