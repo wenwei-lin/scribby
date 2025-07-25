@@ -1,19 +1,35 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import Image from "next/image"
-import { ArrowRight } from "lucide-react"
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import Image from "next/image";
+import { ArrowRight } from "lucide-react";
+import { hashPassword } from "@/utils/string";
+import { loginOrRegister } from "./action";
+import { Toast } from "@/utils/toast";
+import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
-  const [username, setUsername] = useState("")
-  const [password, setPassword] = useState("")
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const router = useRouter();
 
-  const handleLogin = () => {
-    // 模拟登录，直接跳转到主页
-    window.location.href = "/dashboard"
-  }
+  const handleLogin = async () => {
+    const hashedPassword = hashPassword(password);
+    const { success, message } = await loginOrRegister({
+      email: username,
+      password: hashedPassword,
+    });
+    console.log(message, success);
+
+    if (success) {
+      Toast.success(message);
+      router.push("/dashboard");
+    } else {
+      Toast.error(message);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
@@ -60,10 +76,9 @@ export default function LoginPage() {
             >
               登录 <ArrowRight className="ml-2 w-4 h-4" />
             </Button>
-
           </div>
         </div>
       </div>
     </div>
-  )
+  );
 }
