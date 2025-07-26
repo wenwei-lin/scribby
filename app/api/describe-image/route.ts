@@ -12,7 +12,7 @@ export const AIRecognizeSchema = z.object({
   regions: z.array(
     z.object({
       id: z.number(),
-      tip: z.string(),
+      tips: z.string().array(),
     })
   ),
 });
@@ -189,7 +189,7 @@ export async function POST(request: NextRequest) {
 图片中的物体及区域：
 ${regionsInfo}
 
-请尽可能列出所有你在用户给你发送的图片里可见的物品（必须是单个物品，比如人、房子、树等等，不能有修饰限制词）。
+请尽可能列出所有你在用户给你发送的图片里可见的物品（必须是单个物品，比如人、房子、树等等，不能有修饰限制词。如果图片里有多个人，则每个人都视为一个物体，分别输出。每个人需要在“描写提示”当中有可以区分开的外貌描写）。
 在列出词语后，请根据本词语和图像结合联想，该物品可以通过什么角度怎么样描写（每个你识别出来的物品都要进行如下的联想步骤）。所有物品的描写联想都包括：
 1、本词语和图片结合，输出一个适宜的“描写提示”
 2、照片不包含的信息的想象（单独拆分出来，拆成两部分，分别为可能性其他感官联想和可能性联想。示例如下 其他感官联想：鸡肉或许散发着柑橘和香菜混合的清新气息。可能性联想：这或许是一家东南亚餐厅的菜品。）
@@ -226,9 +226,9 @@ ${regionsInfo}
         analysisResult.objects?.map((obj: any, index: number) => ({
           ...obj,
           id: index,
-          tip:
-            aiResponse.object.regions.find((region: any) => region.id === index)
-              ?.tip || "暂无描写提示",
+          tips: aiResponse.object.regions.find(
+            (region: any) => region.id === index
+          )?.tips || ["暂无描写提示"],
         })) || [];
 
       analysisResult.enhancedObjects = enhancedObjects;
@@ -244,7 +244,7 @@ ${regionsInfo}
         analysisResult.objects?.map((obj: any, index: number) => ({
           ...obj,
           id: index,
-          tip: `请描写这个${obj.name}的外观特征和在画面中的位置`,
+          tips: [`请描写这个${obj.name}的外观特征和在画面中的位置`],
         })) || [];
     }
 
