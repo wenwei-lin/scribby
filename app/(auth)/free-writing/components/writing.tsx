@@ -10,8 +10,15 @@ import Link from "next/link";
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { Placeholder } from "@tiptap/extensions";
+import { Message } from "ai";
 
-export default function WritingEditor() {
+export interface WritingEditorProps {
+  defaultChatMessages: Message[];
+}
+
+export default function WritingEditor({
+  defaultChatMessages,
+}: WritingEditorProps) {
   const [wordCount, setWordCount] = useState(0);
   const [antiHumanMode, setAntiHumanMode] = useState(false);
   const [timeElapsed, setTimeElapsed] = useState(0);

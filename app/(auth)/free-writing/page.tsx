@@ -55,7 +55,17 @@ export default function FreeWriting() {
     />
   ) : (
     <>
-      {startWriting && <WritingEditor />}
+      {startWriting && (
+        <WritingEditor
+          defaultChatMessages={[
+            {
+              id: "1",
+              role: "user",
+              content: writingPrompt.topic,
+            },
+          ]}
+        />
+      )}
       <TopicCard
         writingPrompt={writingPrompt}
         isMinimized={isMinimized}
