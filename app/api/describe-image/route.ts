@@ -7,6 +7,7 @@ import { generateObject } from "ai";
 import { openai } from "@ai-sdk/openai";
 import z from "zod";
 import { AzureOpenAI } from "@/lib/model";
+import { randomUUID } from "crypto";
 
 export const AIRecognizeSchema = z.object({
   regions: z.array(
@@ -57,7 +58,7 @@ export async function POST(request: NextRequest) {
 
     // 生成唯一文件名
     const timestamp = new Date().getTime();
-    const fileName = `${timestamp}-${file.name}`;
+    const fileName = `${randomUUID()}.${file.name.split(".").pop()}`;
     const filePath = `describe-image/${fileName}`;
 
     // 上传文件到 Supabase Storage
