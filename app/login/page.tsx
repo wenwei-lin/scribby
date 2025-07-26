@@ -56,7 +56,7 @@ export default function LoginPage() {
       </div>
 
       <div className="flex max-w-8xl w-full bg-white/90 backdrop-blur-sm rounded-3xl shadow-2xl overflow-hidden flex-col relative z-10 border border-white/20">
-        {/* 顶部 scribby */}
+        {/* 顶部 noodling */}
         <div className="w-full flex justify-center mt-8 mb-2">
           <div className="relative">
             <span
@@ -68,7 +68,7 @@ export default function LoginPage() {
                 filter: "drop-shadow(0 8px 16px rgba(254, 89, 51, 0.2))"
               }}
             >
-              scribby
+              noodling
             </span>
             {/* 装饰性下划线 */}
             <div className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 w-32 h-1 bg-gradient-to-r from-transparent via-[#E54A2B] to-transparent rounded-full"></div>

@@ -76,11 +76,11 @@ export default function Dashboard() {
           </div>
           
           {/* 标题区域 */}
-          <div className="text-center mb-8">
-            <div className="w-full flex justify-center mt-0 mb-2">
+          <div className="text-center mb-16">
+            <div className="w-full flex justify-center mt-0 mb-4">
               <div className="relative">
                 <span
-                  className="text-7xl italic tracking-widest font-bold"
+                  className="text-8xl italic tracking-widest font-bold"
                   style={{
                     color: "#FE5933",
                     fontFamily: "'Comic Sans MS', 'Comic Sans', cursive, 'Arial Rounded MT Bold', sans-serif",
@@ -88,7 +88,7 @@ export default function Dashboard() {
                     filter: "drop-shadow(0 8px 16px rgba(254, 89, 51, 0.2))"
                   }}
                 >
-                  scribby
+                  noodling
                 </span>
                 {/* 装饰性下划线 */}
                 <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-24 h-1 bg-gradient-to-r from-transparent via-[#E54A2B] to-transparent rounded-full"></div>
@@ -97,23 +97,28 @@ export default function Dashboard() {
           </div>
 
           {/* 练习选项卡片 */}
-          <div className="grid grid-cols-3 gap-8 mt-16">
+          <div className="grid grid-cols-3 gap-12 mt-24 mb-20">
             {/* 场景拆解练习 */}
             <Link href="/scene-practice">
               <div className="group cursor-pointer">
-                <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 border border-gray-200/50 relative overflow-hidden">
+                <div className="bg-gradient-to-br from-white/90 to-gray-50/80 backdrop-blur-sm rounded-3xl p-8 shadow-[0_4px_20px_rgba(0,0,0,0.08)] hover:shadow-[0_8px_30px_rgba(0,0,0,0.12)] transition-all duration-500 hover:scale-105 border border-gray-200/30 relative overflow-hidden">
+                  {/* 微妙背景纹理 */}
+                  <div className="absolute inset-0 opacity-30" style={{
+                    backgroundImage: 'radial-gradient(circle at 20% 50%, rgba(254, 89, 51, 0.1) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(229, 74, 43, 0.1) 0%, transparent 50%)'
+                  }}></div>
+                  
                   <div className="relative z-10 text-center">
-                    <div className="w-20 h-20 bg-gradient-to-br from-[#E54A2B] to-[#FE5933] rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg group-hover:shadow-xl transition-shadow duration-300">
-                      <span className="text-3xl">🏫</span>
+                    <div className="w-24 h-24 bg-gradient-to-br from-[#E54A2B] to-[#FE5933] rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-[0_8px_25px_rgba(229,74,43,0.3)] group-hover:shadow-[0_12px_35px_rgba(229,74,43,0.4)] transition-shadow duration-500">
+                      <span className="text-4xl">🏫</span>
                     </div>
-                    <h3 className="text-xl font-bold text-gray-800 mb-2">
+                    <h3 className="text-2xl font-bold text-gray-800 mb-4 leading-tight">
                       场景拆解练习
                     </h3>
-                    <p className="text-gray-600 text-sm">观察细节，描绘世界</p>
+                    <p className="text-gray-600 text-base leading-relaxed">观察细节，描绘世界</p>
                   </div>
                   
                   {/* 悬停光效 */}
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#E54A2B]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl"></div>
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#E54A2B]/8 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-3xl"></div>
                 </div>
               </div>
             </Link>
@@ -121,19 +126,24 @@ export default function Dashboard() {
             {/* 照片描写练习 */}
             <Link href="/photo-practice">
               <div className="group cursor-pointer">
-                <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 border border-gray-200/50 relative overflow-hidden">
+                <div className="bg-gradient-to-br from-white/90 to-gray-50/80 backdrop-blur-sm rounded-3xl p-8 shadow-[0_4px_20px_rgba(0,0,0,0.08)] hover:shadow-[0_8px_30px_rgba(0,0,0,0.12)] transition-all duration-500 hover:scale-105 border border-gray-200/30 relative overflow-hidden">
+                  {/* 微妙背景纹理 */}
+                  <div className="absolute inset-0 opacity-30" style={{
+                    backgroundImage: 'radial-gradient(circle at 20% 50%, rgba(254, 89, 51, 0.1) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(229, 74, 43, 0.1) 0%, transparent 50%)'
+                  }}></div>
+                  
                   <div className="relative z-10 text-center">
-                    <div className="w-20 h-20 bg-gradient-to-br from-[#E54A2B] to-[#FE5933] rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg group-hover:shadow-xl transition-shadow duration-300">
-                      <span className="text-3xl">📷</span>
+                    <div className="w-24 h-24 bg-gradient-to-br from-[#E54A2B] to-[#FE5933] rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-[0_8px_25px_rgba(229,74,43,0.3)] group-hover:shadow-[0_12px_35px_rgba(229,74,43,0.4)] transition-shadow duration-500">
+                      <span className="text-4xl">📷</span>
                     </div>
-                    <h3 className="text-xl font-bold text-gray-800 mb-2">
+                    <h3 className="text-2xl font-bold text-gray-800 mb-4 leading-tight">
                       照片描写练习
                     </h3>
-                    <p className="text-gray-600 text-sm">捕捉瞬间，定格美好</p>
+                    <p className="text-gray-600 text-base leading-relaxed">捕捉瞬间，定格美好</p>
                   </div>
                   
                   {/* 悬停光效 */}
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#E54A2B]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl"></div>
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#E54A2B]/8 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-3xl"></div>
                 </div>
               </div>
             </Link>
@@ -141,39 +151,49 @@ export default function Dashboard() {
             {/* 自由写作练习 */}
             <Link href="/free-writing">
               <div className="group cursor-pointer">
-                <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 border border-gray-200/50 relative overflow-hidden">
+                <div className="bg-gradient-to-br from-white/90 to-gray-50/80 backdrop-blur-sm rounded-3xl p-8 shadow-[0_4px_20px_rgba(0,0,0,0.08)] hover:shadow-[0_8px_30px_rgba(0,0,0,0.12)] transition-all duration-500 hover:scale-105 border border-gray-200/30 relative overflow-hidden">
+                  {/* 微妙背景纹理 */}
+                  <div className="absolute inset-0 opacity-30" style={{
+                    backgroundImage: 'radial-gradient(circle at 20% 50%, rgba(254, 89, 51, 0.1) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(229, 74, 43, 0.1) 0%, transparent 50%)'
+                  }}></div>
+                  
                   <div className="relative z-10 text-center">
-                    <div className="w-20 h-20 bg-gradient-to-br from-[#E54A2B] to-[#FE5933] rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg group-hover:shadow-xl transition-shadow duration-300">
-                      <span className="text-3xl">✏️</span>
+                    <div className="w-24 h-24 bg-gradient-to-br from-[#E54A2B] to-[#FE5933] rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-[0_8px_25px_rgba(229,74,43,0.3)] group-hover:shadow-[0_12px_35px_rgba(229,74,43,0.4)] transition-shadow duration-500">
+                      <span className="text-4xl">✏️</span>
                     </div>
-                    <h3 className="text-xl font-bold text-gray-800 mb-2">
+                    <h3 className="text-2xl font-bold text-gray-800 mb-4 leading-tight">
                       自由写作练习
                     </h3>
-                    <p className="text-gray-600 text-sm">释放灵感，创造奇迹</p>
+                    <p className="text-gray-600 text-base leading-relaxed">释放灵感，创造奇迹</p>
                   </div>
                   
                   {/* 悬停光效 */}
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#E54A2B]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl"></div>
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#E54A2B]/8 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-3xl"></div>
                 </div>
               </div>
             </Link>
           </div>
 
           {/* 写作素材库 */}
-          <div className="mt-12 text-center">
+          <div className="mt-20 text-center mb-16">
             <Link href="/materials">
               <div className="inline-block group cursor-pointer">
-                <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 border border-gray-200/50 relative overflow-hidden">
-                  <div className="flex items-center space-x-4">
-                    <span className="text-3xl">📚</span>
-                    <span className="text-lg font-bold text-gray-800">
+                <div className="bg-gradient-to-br from-white/90 to-gray-50/80 backdrop-blur-sm rounded-2xl p-8 shadow-[0_4px_20px_rgba(0,0,0,0.08)] hover:shadow-[0_8px_30px_rgba(0,0,0,0.12)] transition-all duration-500 hover:scale-105 border border-gray-200/30 relative overflow-hidden">
+                  {/* 微妙背景纹理 */}
+                  <div className="absolute inset-0 opacity-30" style={{
+                    backgroundImage: 'radial-gradient(circle at 20% 50%, rgba(254, 89, 51, 0.1) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(229, 74, 43, 0.1) 0%, transparent 50%)'
+                  }}></div>
+                  
+                  <div className="flex items-center space-x-6 relative z-10">
+                    <span className="text-4xl">📚</span>
+                    <span className="text-xl font-bold text-gray-800">
                       写作素材库
                     </span>
-                    <span className="text-[#E54A2B] group-hover:text-[#D84315] transition-colors">→</span>
+                    <span className="text-[#E54A2B] group-hover:text-[#D84315] transition-colors text-2xl">→</span>
                   </div>
                   
                   {/* 悬停光效 */}
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#E54A2B]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl"></div>
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#E54A2B]/8 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl"></div>
                 </div>
               </div>
             </Link>
@@ -183,7 +203,7 @@ export default function Dashboard() {
           <div className="mt-16 relative">
             {/* 装饰性文字 */}
             <div className="text-center mb-8">
-              <p className="text-gray-500 text-sm italic">✨ 让创意在笔尖流淌 ✨</p>
+
             </div>
             
             {/* 动态铅笔图标装饰 */}
