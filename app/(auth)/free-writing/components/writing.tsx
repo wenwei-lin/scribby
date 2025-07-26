@@ -7,21 +7,39 @@ import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { ArrowLeft, Menu, Clock, SaveIcon } from "lucide-react";
 import Link from "next/link";
+import { useEditor, EditorContent } from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
 
 export default function WritingEditor() {
-  const [content, setContent] = useState("");
   const [wordCount, setWordCount] = useState(0);
   const [antiHumanMode, setAntiHumanMode] = useState(false);
   const [timeElapsed, setTimeElapsed] = useState(0);
   const [isWriting, setIsWriting] = useState(false);
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
-  // 计算字数
-  useEffect(() => {
-    const count = content.replace(/\s/g, "").length;
-    setWordCount(count);
-  }, [content]);
+  // TipTap 编辑器配置
+  const editor = useEditor({
+    extensions: [StarterKit],
+    content: "",
+    immediatelyRender: false,
+    editorProps: {
+      attributes: {
+        class:
+          "w-full h-full min-h-[450px] resize-none border-none outline-none text-lg leading-relaxed text-gray-700 placeholder-gray-400 bg-transparent focus:outline-none",
+        style: "font-family: system-ui, -apple-system, sans-serif;",
+      },
+    },
+    onUpdate: ({ editor }) => {
+      const content = editor.getText();
+      const count = content.replace(/\s/g, "").length;
+      setWordCount(count);
+
+      // 开始写作时启动计时器
+      if (!isWriting && content.length > 0) {
+        setIsWriting(true);
+      }
+    },
+  });
 
   // 计时器
   useEffect(() => {
@@ -51,32 +69,6 @@ export default function WritingEditor() {
       .padStart(2, "0")}`;
   };
 
-  // 处理文本变化
-  const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const newContent = e.target.value;
-
-    // 反人类模式下不允许删除内容
-    if (antiHumanMode && newContent.length < content.length) {
-      return;
-    }
-
-    setContent(newContent);
-
-    // 开始写作时启动计时器
-    if (!isWriting && newContent.length > 0) {
-      setIsWriting(true);
-    }
-  };
-
-  // 处理键盘事件
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    // 反人类模式下禁用删除键
-    if (antiHumanMode && (e.key === "Backspace" || e.key === "Delete")) {
-      e.preventDefault();
-      return;
-    }
-  };
-
   // 切换反人类模式
   const toggleAntiHumanMode = () => {
     setAntiHumanMode(!antiHumanMode);
@@ -84,7 +76,7 @@ export default function WritingEditor() {
 
   // 保存作品
   const handleSave = () => {
-    if (content.trim()) {
+    if (editor && editor.getText().trim()) {
       alert(
         `作品已保存！\n字数：${wordCount}\n用时：${formatTime(timeElapsed)}`
       );
@@ -95,7 +87,7 @@ export default function WritingEditor() {
     <div className="min-h-screen bg-gradient-to-br from-yellow-200 via-orange-200 to-orange-300 relative overflow-hidden">
       {/* 顶部导航栏 */}
       <div className="flex items-center justify-between p-6">
-        <Link href="/dashboard">
+        <Link href="/">
           <Button
             variant="ghost"
             size="sm"
@@ -109,6 +101,7 @@ export default function WritingEditor() {
           variant="ghost"
           size="sm"
           className="text-gray-700 hover:bg-white/20 rounded-xl"
+          onClick={handleSave}
         >
           <SaveIcon className="w-5 h-5" />
         </Button>
@@ -157,15 +150,12 @@ export default function WritingEditor() {
               alt="writing-bg"
               className="w-full h-full"
             />
-            <textarea
-              ref={textareaRef}
-              value={content}
-              onChange={handleContentChange}
-              onKeyDown={handleKeyDown}
-              placeholder="type here..."
-              className="absolute top-0 w-full h-full min-h-[450px] resize-none border-none outline-none text-lg leading-relaxed text-gray-700 placeholder-gray-400 bg-transparent"
-              style={{ fontFamily: "system-ui, -apple-system, sans-serif" }}
-            />
+            <div className="absolute top-0 left-0 w-full h-full p-24">
+              <EditorContent
+                editor={editor}
+                className="w-full h-full min-h-[450px]"
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -186,6 +176,107 @@ export default function WritingEditor() {
           <img src="/images/ai-icon.png" />
         </div>
       </div>
+
+      {/* TipTap 编辑器自定义样式 */}
+      <style jsx global>{`
+        .ProseMirror {
+          outline: none !important;
+          background: transparent !important;
+          min-height: 450px;
+          font-family: system-ui, -apple-system, sans-serif;
+          font-size: 1.25rem;
+          line-height: 1.75;
+          color: #374151;
+        }
+
+        .ProseMirror p {
+          margin: 0.5rem 0;
+        }
+
+        .ProseMirror p.is-editor-empty:first-child::before {
+          content: "type here...";
+          float: left;
+          color: #9ca3af;
+          pointer-events: none;
+          height: 0;
+        }
+
+        .ProseMirror h1 {
+          font-size: 2rem;
+          font-weight: 700;
+          margin: 1.5rem 0 1rem 0;
+          line-height: 1.2;
+        }
+
+        .ProseMirror h2 {
+          font-size: 1.5rem;
+          font-weight: 600;
+          margin: 1.25rem 0 0.75rem 0;
+          line-height: 1.3;
+        }
+
+        .ProseMirror h3 {
+          font-size: 1.25rem;
+          font-weight: 600;
+          margin: 1rem 0 0.5rem 0;
+          line-height: 1.4;
+        }
+
+        .ProseMirror ul,
+        .ProseMirror ol {
+          margin: 0.5rem 0;
+          padding-left: 1.5rem;
+        }
+
+        .ProseMirror li {
+          margin: 0.25rem 0;
+        }
+
+        .ProseMirror blockquote {
+          border-left: 4px solid #e5e7eb;
+          padding-left: 1rem;
+          margin: 1rem 0;
+          font-style: italic;
+          color: #6b7280;
+        }
+
+        .ProseMirror code {
+          background-color: rgba(243, 244, 246, 0.5);
+          padding: 0.125rem 0.25rem;
+          border-radius: 0.25rem;
+          font-family: "Monaco", "Menlo", "Ubuntu Mono", monospace;
+          font-size: 0.875em;
+        }
+
+        .ProseMirror pre {
+          background-color: rgba(31, 41, 55, 0.8);
+          color: #f9fafb;
+          padding: 1rem;
+          border-radius: 0.5rem;
+          margin: 1rem 0;
+          overflow-x: auto;
+        }
+
+        .ProseMirror pre code {
+          background: none;
+          padding: 0;
+          color: inherit;
+        }
+
+        .ProseMirror strong {
+          font-weight: 700;
+        }
+
+        .ProseMirror em {
+          font-style: italic;
+        }
+
+        .ProseMirror hr {
+          border: none;
+          border-top: 2px solid #e5e7eb;
+          margin: 2rem 0;
+        }
+      `}</style>
     </div>
   );
 }
