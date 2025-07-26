@@ -3,6 +3,11 @@
 import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
 import { ArrowLeft, Camera, Upload, Loader2 } from "lucide-react";
 import Link from "next/link";
 
@@ -15,7 +20,6 @@ export default function PhotoPractice() {
   const [analysisResult, setAnalysisResult] = useState<any>(null);
   const [imageInfo, setImageInfo] = useState<any>(null);
   const [showInspirationCircles, setShowInspirationCircles] = useState(true);
-  const [hoveredRegion, setHoveredRegion] = useState<number | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const imageRef = useRef<HTMLImageElement>(null);
 
@@ -30,7 +34,6 @@ export default function PhotoPractice() {
       // 清除之前的分析结果
       setAnalysisResult(null);
       setImageInfo(null);
-      setHoveredRegion(null);
     }
   };
 
@@ -77,33 +80,6 @@ export default function PhotoPractice() {
       x: boundingBox.left + boundingBox.width / 2,
       y: boundingBox.top + boundingBox.height / 2,
     };
-  };
-
-  // 计算提示气泡的位置（基于圆圈中心点）
-  const calculateTooltipPosition = (
-    centerPoint: any,
-    containerWidth: number
-  ) => {
-    const tooltipWidth = 300; // 估计的提示框宽度
-    const rightSpace = containerWidth - centerPoint.x;
-
-    if (rightSpace >= tooltipWidth + 40) {
-      // 右侧有足够空间，显示在右侧
-      return {
-        left: `${centerPoint.x + 30}px`,
-        top: `${centerPoint.y - 60}px`,
-        arrowClass: "left-0 top-1/2 transform -translate-x-2 -translate-y-1/2",
-        arrowDirection: "border-r-purple-100",
-      };
-    } else {
-      // 右侧空间不足，显示在左侧
-      return {
-        left: `${centerPoint.x - tooltipWidth - 30}px`,
-        top: `${centerPoint.y - 60}px`,
-        arrowClass: "right-0 top-1/2 transform translate-x-2 -translate-y-1/2",
-        arrowDirection: "border-l-purple-100",
-      };
-    }
   };
 
   // 处理图片上传和分析
@@ -222,106 +198,51 @@ export default function PhotoPractice() {
                         );
                         if (!centerPoint) return null;
 
-                        const containerWidth =
-                          imageRef.current?.parentElement?.clientWidth || 0;
-                        const tooltipPos = calculateTooltipPosition(
-                          centerPoint,
-                          containerWidth
-                        );
-
                         return (
-                          <div key={index}>
-                            {/* 圆圈标记 */}
-                            <div
-                              className="absolute transform -translate-x-1/2 -translate-y-1/2 cursor-pointer group"
-                              style={{
-                                left: `${centerPoint.x}px`,
-                                top: `${centerPoint.y}px`,
-                              }}
-                              onMouseEnter={() => setHoveredRegion(index)}
-                              onMouseLeave={() => setHoveredRegion(null)}
-                            >
-                              {/* 外圈：始终显示 */}
+                          <HoverCard key={index}>
+                            <HoverCardTrigger asChild>
                               <div
-                                className={`w-8 h-8 rounded-full border-2 bg-gray-100/70 backdrop-blur-sm transition-all duration-200 ${
-                                  hoveredRegion === index
-                                    ? "border-gray-400 shadow-lg scale-110 bg-gray-200/80"
-                                    : "border-gray-300 shadow-sm"
-                                }`}
-                              />
-
-                              {/* 内圈：始终显示 */}
-                              <div
-                                className={`absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-4 h-4 rounded-full border bg-white/80 backdrop-blur-sm transition-all duration-200 ${
-                                  hoveredRegion === index
-                                    ? "border-gray-500 shadow-md scale-110 bg-white/90"
-                                    : "border-gray-400"
-                                }`}
-                              />
-
-                              {/* 悬浮时的外扩光晕 */}
-                              <div
-                                className={`absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded-full border border-gray-300/50 bg-gray-200/20 backdrop-blur-sm transition-all duration-300 ${
-                                  hoveredRegion === index
-                                    ? "w-12 h-12 opacity-100"
-                                    : "w-8 h-8 opacity-0"
-                                }`}
-                              />
-                            </div>
-
-                            {/* 描写提示气泡 - 只在悬浮时显示 */}
-                            {hoveredRegion === index && (
-                              <div
-                                className="absolute z-20 animate-in fade-in duration-200"
+                                className="absolute transform -translate-x-1/2 -translate-y-1/2 cursor-pointer group"
                                 style={{
-                                  left: tooltipPos.left,
-                                  top: tooltipPos.top,
+                                  left: `${centerPoint.x}px`,
+                                  top: `${centerPoint.y}px`,
                                 }}
                               >
-                                <div className="bg-white text-gray-800 p-4 rounded-lg shadow-xl w-80 relative border border-purple-200">
-                                  <div className="flex items-start space-x-3">
-                                    <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                                      <span className="text-sm">💡</span>
-                                    </div>
-                                    <div className="flex-1">
-                                      <div className="flex items-center justify-between mb-2">
-                                        <h4 className="font-semibold text-base text-purple-800">
-                                          {obj.name}
-                                        </h4>
-                                        <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">
-                                          #{obj.id}
-                                        </span>
-                                      </div>
-                                      <p className="text-sm leading-relaxed text-gray-700">
-                                        {obj.tip}
-                                      </p>
-                                      <div className="mt-2 text-xs text-gray-500">
-                                        置信度:{" "}
-                                        {Math.round(obj.confidence * 100)}%
-                                      </div>
-                                    </div>
+                                {/* 外圈：始终显示 */}
+                                <div className="w-8 h-8 rounded-full border-2 bg-gray-100/70 backdrop-blur-sm transition-all duration-200 border-gray-300 shadow-sm hover:border-gray-400 hover:shadow-lg hover:scale-110 hover:bg-gray-200/80" />
+
+                                {/* 内圈：始终显示 */}
+                                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-4 h-4 rounded-full border bg-white/80 backdrop-blur-sm transition-all duration-200 border-gray-400 hover:border-gray-500 hover:shadow-md hover:scale-110 hover:bg-white/90" />
+                              </div>
+                            </HoverCardTrigger>
+                            <HoverCardContent
+                              className="w-80 p-4 bg-white text-gray-800 border border-purple-200 shadow-xl"
+                              sideOffset={15}
+                              align="start"
+                            >
+                              <div className="flex items-start space-x-3">
+                                <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                                  <span className="text-sm">💡</span>
+                                </div>
+                                <div className="flex-1">
+                                  <div className="flex items-center justify-between mb-2">
+                                    <h4 className="font-semibold text-base text-purple-800">
+                                      {obj.name}
+                                    </h4>
+                                    <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">
+                                      #{obj.id}
+                                    </span>
                                   </div>
-                                  {/* 指向箭头 */}
-                                  <div
-                                    className={`absolute ${tooltipPos.arrowClass}`}
-                                  >
-                                    <div
-                                      className={`w-0 h-0 border-t-4 border-b-4 border-transparent ${
-                                        tooltipPos.arrowDirection.includes(
-                                          "border-r"
-                                        )
-                                          ? "border-r-8"
-                                          : "border-l-8"
-                                      } ${tooltipPos.arrowDirection.replace(
-                                        "purple-100",
-                                        "white"
-                                      )}`}
-                                    ></div>
+                                  <p className="text-sm leading-relaxed text-gray-700">
+                                    {obj.tip}
+                                  </p>
+                                  <div className="mt-2 text-xs text-gray-500">
+                                    置信度: {Math.round(obj.confidence * 100)}%
                                   </div>
                                 </div>
                               </div>
-                            )}
-                          </div>
+                            </HoverCardContent>
+                          </HoverCard>
                         );
                       }
                     )}
