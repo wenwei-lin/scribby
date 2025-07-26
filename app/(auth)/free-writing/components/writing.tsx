@@ -9,6 +9,7 @@ import { ArrowLeft, Menu, Clock, SaveIcon } from "lucide-react";
 import Link from "next/link";
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
+import { Placeholder } from "@tiptap/extensions";
 
 export default function WritingEditor() {
   const [wordCount, setWordCount] = useState(0);
@@ -19,7 +20,12 @@ export default function WritingEditor() {
 
   // TipTap 编辑器配置
   const editor = useEditor({
-    extensions: [StarterKit],
+    extensions: [
+      StarterKit,
+      Placeholder.configure({
+        placeholder: "开始你的创作之旅...",
+      }),
+    ],
     content: "",
     immediatelyRender: false,
     editorProps: {
@@ -194,11 +200,12 @@ export default function WritingEditor() {
         }
 
         .ProseMirror p.is-editor-empty:first-child::before {
-          content: "type here...";
+          content: "开始你的创作之旅...";
           float: left;
           color: #9ca3af;
           pointer-events: none;
           height: 0;
+          font-style: italic;
         }
 
         .ProseMirror h1 {

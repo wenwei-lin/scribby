@@ -113,6 +113,9 @@ importers:
       '@supabase/supabase-js':
         specifier: ^2.52.1
         version: 2.52.1
+      '@tiptap/extensions':
+        specifier: ^3.0.7
+        version: 3.0.7(@tiptap/core@3.0.7(@tiptap/pm@3.0.7))(@tiptap/pm@3.0.7)
       '@tiptap/pm':
         specifier: ^3.0.7
         version: 3.0.7
