@@ -46,7 +46,14 @@ export default function FreeWritingQuestion() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-100 via-orange-50 to-red-50 flex items-center justify-center relative overflow-hidden p-4">
+    <div className="min-h-screen bg-gradient-to-br from-gray-100 via-orange-50 to-red-50 flex items-center justify-center relative overflow-hidden p-4 ">
+      {/** 返回 */}
+      <div className="absolute top-4 left-4">
+        <Link href="/">
+          <ArrowLeft />
+        </Link>
+      </div>
+
       {/* 背景橙色圆点装饰 */}
       <div className="absolute inset-0 pointer-events-none">
         <div
