@@ -160,14 +160,11 @@ export default function PhotoPractice() {
       <div className="min-h-screen bg-white flex flex-col relative">
         {/* 顶部图片展示区 - 固定高度，正常占据空间 */}
         <div
-          className="p-4 flex-shrink-0 absolute top-0 left-0 z-40"
+          className="p-4 absolute top-0 left-1/2 -translate-x-1/2 w-fit z-40"
           style={{ height: "280px" }}
         >
           <div className="max-w-4xl mx-auto h-full flex items-center justify-between">
             <div className="text-center h-full flex flex-col justify-center">
-              <h2 className="text-lg font-semibold text-gray-800 mb-4">
-                照片描写练习
-              </h2>
               <div className="relative inline-block">
                 <img
                   src={selectedImage || "/placeholder.svg"}
