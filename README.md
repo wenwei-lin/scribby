@@ -1,4 +1,13 @@
-# AdventureX 2025 写作
+# AdventureX 2025 - Noodling | 授笔漫步
+
+授笔漫步：用 AI 陪你练写作，让学习像散步一样轻松有趣。
+
+## 小组成员
+
+- [Wenwei Lin](https://github.com/wenwei-lin)
+- [Brian20061119](https://github.com/Brian20061119)
+- 罐装西西弗
+- 无治
 
 ## 运行
 
