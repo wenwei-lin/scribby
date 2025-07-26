@@ -10,6 +10,7 @@ import { getRandomQuestions } from "./util";
 import { FreeWritingQuestion, generateFreeWritingQuestion } from "./action";
 import FreeWritingQuestionForm from "./components/question-form";
 import TopicCard from "./components/topic-card";
+import WritingEditor from "./components/writing";
 
 export default function FreeWriting() {
   const [questions, setQuestions] = useState<string[]>([]);
@@ -53,7 +54,8 @@ export default function FreeWriting() {
       handleGenerate={handleGenerate}
     />
   ) : (
-    <div>
+    <>
+      {startWriting && <WritingEditor />}
       <TopicCard
         writingPrompt={writingPrompt}
         isMinimized={isMinimized}
@@ -72,6 +74,6 @@ export default function FreeWriting() {
           setShowCardContent(false);
         }}
       />
-    </div>
+    </>
   );
 }
