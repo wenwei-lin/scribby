@@ -242,22 +242,38 @@ export default function PhotoPractice() {
                     </div>
                   )}
 
-                  {analysisResult.objects &&
-                    analysisResult.objects.length > 0 && (
+                  {analysisResult.enhancedObjects &&
+                    analysisResult.enhancedObjects.length > 0 && (
                       <div className="mb-3">
                         <span className="text-sm font-medium text-purple-700">
-                          识别物体：
+                          AI分析的物体及描写提示：
                         </span>
-                        <div className="flex flex-wrap gap-2 mt-1">
-                          {analysisResult.objects
-                            .slice(0, 5)
+                        <div className="space-y-2 mt-2">
+                          {analysisResult.enhancedObjects
+                            .slice(0, 3)
                             .map((obj: any, index: number) => (
-                              <span
+                              <div
                                 key={index}
-                                className="px-2 py-1 bg-white rounded-full text-xs text-gray-700 border"
+                                className="p-3 bg-white rounded-lg border border-purple-100"
                               >
-                                {obj.name} ({Math.round(obj.confidence * 100)}%)
-                              </span>
+                                <div className="flex items-center justify-between mb-1">
+                                  <span className="text-sm font-medium text-gray-800">
+                                    {obj.name} (id: {obj.id})
+                                  </span>
+                                  <span className="text-xs text-gray-500">
+                                    置信度: {Math.round(obj.confidence * 100)}%
+                                  </span>
+                                </div>
+                                <div className="text-xs text-gray-600 mb-1">
+                                  区域: x:{obj.boundingBox?.x}, y:
+                                  {obj.boundingBox?.y}, w:{obj.boundingBox?.w},
+                                  h:{obj.boundingBox?.h}
+                                </div>
+                                <div className="text-xs text-purple-700 bg-purple-50 p-2 rounded">
+                                  <strong>描写提示：</strong>
+                                  {obj.tip}
+                                </div>
+                              </div>
                             ))}
                         </div>
                       </div>
