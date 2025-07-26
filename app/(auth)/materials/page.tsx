@@ -1,21 +1,22 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Card, CardContent, CardHeader } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { ArrowLeft, Search, Star, ArrowRight, Plus } from "lucide-react"
-import Link from "next/link"
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { ArrowLeft, Search, Star, ArrowRight, Plus } from "lucide-react";
+import Link from "next/link";
 
 export default function Materials() {
-  const [searchQuery, setSearchQuery] = useState("")
-  const [currentPage, setCurrentPage] = useState(1)
+  const [searchQuery, setSearchQuery] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
 
   const materials = [
     {
       title: "《我与春天有个约会》",
-      description: "这篇文章描述了我和春天的美丽邂逅，白雪皑皑，温暖如春的感受...",
+      description:
+        "这篇文章描述了我和春天的美丽邂逅，白雪皑皑，温暖如春的感受...",
       date: "2023年4月12日",
       category: "记叙文",
       level: "青春",
@@ -24,7 +25,8 @@ export default function Materials() {
     },
     {
       title: "《好像，从来都是》",
-      description: "文章描述了对现代社会中的种种现象的思考，对人生的感悟，社会三个问题提出了自己的看法...",
+      description:
+        "文章描述了对现代社会中的种种现象的思考，对人生的感悟，社会三个问题提出了自己的看法...",
       date: "2023年5月20日",
       category: "议论文",
       level: "升华",
@@ -33,7 +35,8 @@ export default function Materials() {
     },
     {
       title: "《钢铁是怎样炼成的》",
-      description: "保尔·柯察金的故事告诉我们坚强，坚持初心的重要性，让我们从中学习到坚韧不拔的精神...",
+      description:
+        "保尔·柯察金的故事告诉我们坚强，坚持初心的重要性，让我们从中学习到坚韧不拔的精神...",
       date: "2023年3月8日",
       category: "读后感",
       level: "深度",
@@ -42,7 +45,8 @@ export default function Materials() {
     },
     {
       title: "《春天的四季》",
-      description: "这篇文章生动描述了春天的美丽景色，春天的花朵，春天的温暖，春天的生机...",
+      description:
+        "这篇文章生动描述了春天的美丽景色，春天的花朵，春天的温暖，春天的生机...",
       date: "2023年6月8日",
       category: "描写文",
       level: "美文",
@@ -51,14 +55,15 @@ export default function Materials() {
     },
     {
       title: "《中国传统节日》",
-      description: "文章详细介绍了中国几个主要传统节日的起源，习俗和文化内涵，包括春节，中秋节等...",
+      description:
+        "文章详细介绍了中国几个主要传统节日的起源，习俗和文化内涵，包括春节，中秋节等...",
       date: "2023年2月10日",
       category: "说明文",
       level: "传统文化",
       score: 93.9,
       type: "说明文",
     },
-  ]
+  ];
 
   const getCategoryColor = (category: string) => {
     const colors: { [key: string]: string } = {
@@ -67,16 +72,16 @@ export default function Materials() {
       读后感: "bg-green-100 text-green-700",
       描写文: "bg-yellow-100 text-yellow-700",
       说明文: "bg-red-100 text-red-700",
-    }
-    return colors[category] || "bg-gray-100 text-gray-700"
-  }
+    };
+    return colors[category] || "bg-gray-100 text-gray-700";
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
       {/* 顶部导航 */}
       <div className="bg-white border-b border-gray-200 px-8 py-4">
         <div className="flex items-center space-x-4">
-          <Link href="/dashboard">
+          <Link href="/">
             <Button variant="ghost" size="sm" className="text-gray-600">
               <ArrowLeft className="w-4 h-4 mr-2" />
             </Button>
@@ -97,13 +102,22 @@ export default function Materials() {
               className="pl-10 h-10 bg-gray-50 border-0 rounded-lg"
             />
           </div>
-          <Button variant="outline" className="h-10 px-4 rounded-lg bg-transparent">
+          <Button
+            variant="outline"
+            className="h-10 px-4 rounded-lg bg-transparent"
+          >
             日期 ▼
           </Button>
-          <Button variant="outline" className="h-10 px-4 rounded-lg bg-transparent">
+          <Button
+            variant="outline"
+            className="h-10 px-4 rounded-lg bg-transparent"
+          >
             练习类型 ▼
           </Button>
-          <Button variant="outline" className="h-10 px-4 rounded-lg bg-yellow-100 text-yellow-700 border-yellow-200">
+          <Button
+            variant="outline"
+            className="h-10 px-4 rounded-lg bg-yellow-100 text-yellow-700 border-yellow-200"
+          >
             标签 ▼
           </Button>
         </div>
@@ -113,15 +127,28 @@ export default function Materials() {
       <div className="p-8">
         <div className="grid grid-cols-2 gap-6 mb-8">
           {materials.map((material, index) => (
-            <Card key={index} className="border-0 shadow-sm hover:shadow-md transition-shadow">
+            <Card
+              key={index}
+              className="border-0 shadow-sm hover:shadow-md transition-shadow"
+            >
               <CardHeader className="pb-3">
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
-                    <h3 className="font-bold text-gray-800 mb-2">{material.title}</h3>
-                    <p className="text-sm text-gray-600 line-clamp-2 mb-3">{material.description}</p>
+                    <h3 className="font-bold text-gray-800 mb-2">
+                      {material.title}
+                    </h3>
+                    <p className="text-sm text-gray-600 line-clamp-2 mb-3">
+                      {material.description}
+                    </p>
                     <div className="flex items-center space-x-4 text-xs text-gray-500">
                       <span>{material.date}</span>
-                      <Badge className={`${getCategoryColor(material.category)} border-0`}>{material.category}</Badge>
+                      <Badge
+                        className={`${getCategoryColor(
+                          material.category
+                        )} border-0`}
+                      >
+                        {material.category}
+                      </Badge>
                       <Badge variant="outline" className="border-gray-200">
                         {material.level}
                       </Badge>
@@ -135,11 +162,16 @@ export default function Materials() {
                     {material.score > 0 && (
                       <>
                         <Star className="w-4 h-4 text-yellow-500 fill-current" />
-                        <span className="text-sm font-medium">AI评分: {material.score}</span>
+                        <span className="text-sm font-medium">
+                          AI评分: {material.score}
+                        </span>
                       </>
                     )}
                   </div>
-                  <Button size="sm" className="bg-[#FE5933] hover:bg-[#E54A2B] text-white">
+                  <Button
+                    size="sm"
+                    className="bg-[#FE5933] hover:bg-[#E54A2B] text-white"
+                  >
                     查看 <ArrowRight className="ml-1 w-3 h-3" />
                   </Button>
                 </div>
@@ -153,8 +185,12 @@ export default function Materials() {
           <div className="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4">
             <span className="text-2xl">📝</span>
           </div>
-          <h3 className="text-lg font-medium text-gray-800 mb-2">你的素材库还是空的</h3>
-          <p className="text-gray-600 mb-6">开始你的写作之旅，创作精彩文章，获得AI智能反馈，让你的作品越来越出色！</p>
+          <h3 className="text-lg font-medium text-gray-800 mb-2">
+            你的素材库还是空的
+          </h3>
+          <p className="text-gray-600 mb-6">
+            开始你的写作之旅，创作精彩文章，获得AI智能反馈，让你的作品越来越出色！
+          </p>
           <Button className="bg-[#FE5933] hover:bg-[#E54A2B] text-white">
             <Plus className="w-4 h-4 mr-2" />
             立即开始写作
@@ -168,7 +204,11 @@ export default function Materials() {
           </Button>
           <Button
             size="sm"
-            className={`w-8 h-8 ${currentPage === 1 ? "bg-[#FE5933] text-white" : "bg-white text-gray-700"}`}
+            className={`w-8 h-8 ${
+              currentPage === 1
+                ? "bg-[#FE5933] text-white"
+                : "bg-white text-gray-700"
+            }`}
           >
             1
           </Button>
@@ -192,5 +232,5 @@ export default function Materials() {
         </div>
       </div>
     </div>
-  )
+  );
 }

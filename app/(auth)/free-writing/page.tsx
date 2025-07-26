@@ -50,7 +50,7 @@ export default function FreeWritingQuestion() {
       {/* 顶部导航 */}
       <div className="bg-white border-b border-gray-200 px-8 py-4">
         <div className="flex items-center space-x-4">
-          <Link href="/dashboard">
+          <Link href="/">
             <Button variant="ghost" size="sm" className="text-gray-600">
               <ArrowLeft className="w-4 h-4 mr-2" />
             </Button>
