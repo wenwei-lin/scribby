@@ -226,7 +226,7 @@ export default function PhotoPractice() {
                               </div>
                             </HoverCardTrigger>
                             <HoverCardContent
-                              className="w-80 p-4 bg-white text-gray-800 border border-purple-200 shadow-xl"
+                              className="w-96 p-4 bg-white text-gray-800 border border-purple-200 shadow-xl max-h-96 overflow-y-auto"
                               sideOffset={15}
                               align="start"
                             >
@@ -243,11 +243,26 @@ export default function PhotoPractice() {
                                       #{obj.id}
                                     </span>
                                   </div>
-                                  <p className="text-sm leading-relaxed text-gray-700">
-                                    {obj.tip}
-                                  </p>
-                                  <div className="mt-2 text-xs text-gray-500">
-                                    置信度: {Math.round(obj.confidence * 100)}%
+                                  <div className="space-y-2">
+                                    {obj.tips && obj.tips.length > 0 ? (
+                                      obj.tips.map(
+                                        (tip: string, tipIndex: number) => (
+                                          <div
+                                            key={tipIndex}
+                                            className="text-sm leading-relaxed text-gray-700 p-2 bg-gray-50 rounded"
+                                          >
+                                            <span className="text-xs text-purple-600 font-medium">
+                                              #{tipIndex + 1}
+                                            </span>
+                                            <p className="mt-1">{tip}</p>
+                                          </div>
+                                        )
+                                      )
+                                    ) : (
+                                      <p className="text-sm text-gray-500 italic">
+                                        暂无描写提示
+                                      </p>
+                                    )}
                                   </div>
                                 </div>
                               </div>
