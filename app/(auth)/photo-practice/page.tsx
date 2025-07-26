@@ -8,8 +8,9 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
-import { ArrowLeft, Camera, Upload, Loader2 } from "lucide-react";
+import { ArrowLeft, Camera, Upload, Loader2, PenTool } from "lucide-react";
 import Link from "next/link";
+import WritingEditor from "@/components/modules/writing/writing";
 
 export default function PhotoPractice() {
   const [selectedImage, setSelectedImage] = useState(
@@ -20,6 +21,7 @@ export default function PhotoPractice() {
   const [analysisResult, setAnalysisResult] = useState<any>(null);
   const [imageInfo, setImageInfo] = useState<any>(null);
   const [showInspirationCircles, setShowInspirationCircles] = useState(true);
+  const [isWritingMode, setIsWritingMode] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const imageRef = useRef<HTMLImageElement>(null);
 
@@ -125,6 +127,16 @@ export default function PhotoPractice() {
     fileInputRef.current?.click();
   };
 
+  // 开始写作模式
+  const startWriting = () => {
+    setIsWritingMode(true);
+  };
+
+  // 退出写作模式
+  const exitWriting = () => {
+    setIsWritingMode(false);
+  };
+
   // 监听窗口大小变化，重新计算图片信息
   useEffect(() => {
     const handleResize = () => {
@@ -141,6 +153,103 @@ export default function PhotoPractice() {
       setTimeout(handleImageLoad, 100); // 稍微延迟确保图片已渲染
     }
   }, [analysisResult]);
+
+  // 如果是写作模式，显示写作界面
+  if (isWritingMode) {
+    return (
+      <div className="min-h-screen bg-white flex flex-col relative">
+        {/* 顶部图片展示区 - 固定高度，正常占据空间 */}
+        <div
+          className="p-4 flex-shrink-0 absolute top-0 left-0 z-40"
+          style={{ height: "280px" }}
+        >
+          <div className="max-w-4xl mx-auto h-full flex items-center justify-between">
+            <div className="text-center h-full flex flex-col justify-center">
+              <h2 className="text-lg font-semibold text-gray-800 mb-4">
+                照片描写练习
+              </h2>
+              <div className="relative inline-block">
+                <img
+                  src={selectedImage || "/placeholder.svg"}
+                  alt="Practice image"
+                  className="max-w-sm max-h-48 object-contain rounded-lg shadow-md"
+                />
+
+                {/* 在小图上也显示圆圈标记（缩小版） */}
+                {analysisResult?.enhancedObjects &&
+                  showInspirationCircles &&
+                  analysisResult.enhancedObjects.map(
+                    (obj: any, index: number) => {
+                      // 简化的圆圈标记，不需要精确计算位置
+                      return (
+                        <HoverCard key={index}>
+                          <HoverCardTrigger asChild>
+                            <div
+                              className="absolute w-4 h-4 rounded-full border bg-white/80 backdrop-blur-sm border-gray-400 cursor-pointer hover:scale-110 transition-transform"
+                              style={{
+                                left: `${20 + index * 15}%`,
+                                top: `${20 + (index % 3) * 20}%`,
+                              }}
+                            />
+                          </HoverCardTrigger>
+                          <HoverCardContent
+                            className="w-80 p-3 bg-white text-gray-800 border border-purple-200 shadow-xl"
+                            sideOffset={10}
+                          >
+                            <div className="flex items-start space-x-2">
+                              <div className="w-6 h-6 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0">
+                                <span className="text-xs">💡</span>
+                              </div>
+                              <div className="flex-1">
+                                <h4 className="font-semibold text-sm text-purple-800 mb-1">
+                                  {obj.name}
+                                </h4>
+                                <div className="space-y-1">
+                                  {obj.tips && obj.tips.length > 0 ? (
+                                    obj.tips
+                                      .slice(0, 2)
+                                      .map((tip: string, tipIndex: number) => (
+                                        <div
+                                          key={tipIndex}
+                                          className="text-xs leading-relaxed text-gray-700 p-1 bg-gray-50 rounded"
+                                        >
+                                          {tip}
+                                        </div>
+                                      ))
+                                  ) : (
+                                    <p className="text-xs text-gray-500 italic">
+                                      暂无描写提示
+                                    </p>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+                          </HoverCardContent>
+                        </HoverCard>
+                      );
+                    }
+                  )}
+              </div>
+            </div>
+
+            {/* <Button
+              onClick={() => setShowInspirationCircles(!showInspirationCircles)}
+              variant="outline"
+              size="sm"
+              className="text-blue-700 hover:bg-blue-50"
+            >
+              {showInspirationCircles ? "隐藏提示" : "显示提示"}
+            </Button> */}
+          </div>
+        </div>
+
+        {/* 写作编辑器 - 占据剩余空间 */}
+        <div className="flex-1 relative">
+          <WritingEditor defaultChatMessages={[]} />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -298,15 +407,24 @@ export default function PhotoPractice() {
               {isUploading ? "分析中..." : "上传并分析"}
             </Button>
             {analysisResult?.enhancedObjects && (
-              <Button
-                onClick={() =>
-                  setShowInspirationCircles(!showInspirationCircles)
-                }
-                variant="outline"
-                className="px-6 py-3 border-blue-200 text-blue-700 hover:bg-blue-50 bg-transparent"
-              >
-                {showInspirationCircles ? "隐藏圆圈" : "显示圆圈"}
-              </Button>
+              <>
+                <Button
+                  onClick={() =>
+                    setShowInspirationCircles(!showInspirationCircles)
+                  }
+                  variant="outline"
+                  className="px-6 py-3 border-blue-200 text-blue-700 hover:bg-blue-50 bg-transparent"
+                >
+                  {showInspirationCircles ? "隐藏圆圈" : "显示圆圈"}
+                </Button>
+                <Button
+                  onClick={startWriting}
+                  className="bg-green-600 hover:bg-green-700 text-white px-6 py-3"
+                >
+                  <PenTool className="w-4 h-4 mr-2" />
+                  开始写作
+                </Button>
+              </>
             )}
           </div>
 
