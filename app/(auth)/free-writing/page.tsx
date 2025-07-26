@@ -10,7 +10,7 @@ import { getRandomQuestions } from "./util";
 import { FreeWritingQuestion, generateFreeWritingQuestion } from "./action";
 import FreeWritingQuestionForm from "./components/question-form";
 import TopicCard from "./components/topic-card";
-import WritingEditor from "./components/writing";
+import WritingEditor from "../../../components/modules/writing/writing";
 
 export default function FreeWriting() {
   const [questions, setQuestions] = useState<string[]>([]);
