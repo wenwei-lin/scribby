@@ -196,37 +196,6 @@ export default function Dashboard() {
             </Link>
           </div>
 
-          {/* 写作素材库 */}
-          <div className="mt-20 text-center mb-16">
-            <Link href="/materials">
-              <div className="inline-block group cursor-pointer">
-                <div className="bg-gradient-to-br from-white/90 to-gray-50/80 backdrop-blur-sm rounded-2xl p-8 shadow-[0_4px_20px_rgba(0,0,0,0.08)] hover:shadow-[0_8px_30px_rgba(0,0,0,0.12)] transition-all duration-500 hover:scale-105 border border-gray-200/30 relative overflow-hidden">
-                  {/* 微妙背景纹理 */}
-                  <div
-                    className="absolute inset-0 opacity-30"
-                    style={{
-                      backgroundImage:
-                        "radial-gradient(circle at 20% 50%, rgba(254, 89, 51, 0.1) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(229, 74, 43, 0.1) 0%, transparent 50%)",
-                    }}
-                  ></div>
-
-                  <div className="flex items-center space-x-6 relative z-10">
-                    <span className="text-4xl">📚</span>
-                    <span className="text-xl font-bold text-gray-800">
-                      写作素材库
-                    </span>
-                    <span className="text-[#E54A2B] group-hover:text-[#D84315] transition-colors text-2xl">
-                      →
-                    </span>
-                  </div>
-
-                  {/* 悬停光效 */}
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#E54A2B]/8 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl"></div>
-                </div>
-              </div>
-            </Link>
-          </div>
-
           {/* 动态装饰区域 */}
           <div className="mt-16 relative">
             {/* 装饰性文字 */}

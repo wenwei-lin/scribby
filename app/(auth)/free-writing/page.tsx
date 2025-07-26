@@ -56,6 +56,7 @@ export default function FreeWriting() {
               content: writingPrompt.topic,
             },
           ]}
+          showAntiHumanMode
         />
       )}
       <TopicCard
