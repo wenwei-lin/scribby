@@ -3,6 +3,23 @@ import { createClient as createSupabaseClient } from "@supabase/supabase-js";
 import { ImageAnalysisClient } from "@azure-rest/ai-vision-image-analysis";
 import createClient from "@azure-rest/ai-vision-image-analysis";
 import { AzureKeyCredential } from "@azure/core-auth";
+import { generateObject } from "ai";
+import { openai } from "@ai-sdk/openai";
+import z from "zod";
+import { AzureOpenAI } from "@/lib/model";
+
+export const AIRecognizeSchema = z.object({
+  regions: z.array(
+    z.object({
+      id: z.number(),
+      tip: z
+        .string()
+        .describe(
+          "描写提示，包含：1）适宜的描写提示 2）其他感官联想 3）可能性联想"
+        ),
+    })
+  ),
+});
 
 export async function POST(request: NextRequest) {
   try {
@@ -158,7 +175,86 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    console.log(JSON.stringify(analysisResult, null, 2));
+    // 构建区域信息字符串
+    let regionsInfo = "";
+    if (analysisResult.objects && analysisResult.objects.length > 0) {
+      regionsInfo = analysisResult.objects
+        .map((obj: any, index: number) => {
+          const bbox = obj.boundingBox;
+          return `- id=${index}, label=${obj.name}, bbox=(x:${bbox.x}, y:${bbox.y}, w:${bbox.w}, h:${bbox.h})`;
+        })
+        .join("\n");
+    }
+
+    const prompt = `你是一个物品识别器。以下是图片中识别出的物体和区域信息：
+
+图片描述：${analysisResult.caption?.text || "无描述"}
+
+图片中的物体及区域：
+${regionsInfo}
+
+请为每个识别出的物体生成描写提示。每个物体的描写提示应该包括：
+1、适宜的描写提示（根据物体和图片结合，指导如何描写这个物体）
+2、其他感官联想（照片中看不到但可以想象的感官体验）
+3、可能性联想（基于物体和场景的合理想象）
+
+示例格式：
+适宜的描写提示：描述人物的姿态和表情
+其他感官联想：或许能听到轻快的脚步声
+可能性联想：这可能是在公园里晨练的人
+
+请为每个区域（按id顺序）生成结构化的描写提示。`;
+
+    // 调用AI生成描写提示
+    try {
+      const aiResponse = await generateObject({
+        model: AzureOpenAI("gpt-4o"),
+        messages: [
+          {
+            role: "user",
+            content: [
+              {
+                type: "image",
+                image: imageUrl, // 直接传递图片URL
+              },
+              {
+                type: "text",
+                text: prompt,
+              },
+            ],
+          },
+        ],
+        schema: AIRecognizeSchema,
+      });
+
+      // 合并AI结果和原始分析结果
+      const enhancedObjects =
+        analysisResult.objects?.map((obj: any, index: number) => ({
+          ...obj,
+          id: index,
+          tip:
+            aiResponse.object.regions.find((region: any) => region.id === index)
+              ?.tip || "暂无描写提示",
+        })) || [];
+
+      analysisResult.enhancedObjects = enhancedObjects;
+
+      console.log(
+        "AI生成的描写提示:",
+        JSON.stringify(aiResponse.object, null, 2)
+      );
+    } catch (aiError) {
+      console.error("AI生成描写提示失败:", aiError);
+      // 如果AI调用失败，使用默认的描写提示
+      analysisResult.enhancedObjects =
+        analysisResult.objects?.map((obj: any, index: number) => ({
+          ...obj,
+          id: index,
+          tip: `请描写这个${obj.name}的外观特征和在画面中的位置`,
+        })) || [];
+    }
+
+    console.log("完整分析结果:", JSON.stringify(analysisResult, null, 2));
 
     return NextResponse.json({
       success: true,
