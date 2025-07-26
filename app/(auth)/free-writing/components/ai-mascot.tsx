@@ -6,7 +6,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { X, Send, Bot } from "lucide-react";
+import { X, Send } from "lucide-react";
 import { useChat } from "ai/react";
 
 interface AIMascotProps {
@@ -96,7 +96,11 @@ export default function AIMascot({ getCurrentWriting }: AIMascotProps) {
             <div className="flex items-center justify-between p-4 border-b border-gray-200">
               <div className="flex items-center space-x-2">
                 <div className="w-8 h-8 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center">
-                  <Bot className="w-4 h-4 text-white" />
+                  <img
+                    src="/images/ai-icon.png"
+                    alt="AI Assistant"
+                    className="w-4 h-4 object-contain"
+                  />
                 </div>
                 <div>
                   <h3 className="font-semibold text-gray-800">写作助手</h3>
@@ -133,7 +137,11 @@ export default function AIMascot({ getCurrentWriting }: AIMascotProps) {
                     >
                       <div className="flex items-start space-x-2">
                         {message.role === "assistant" && (
-                          <Bot className="w-4 h-4 mt-0.5 flex-shrink-0" />
+                          <img
+                            src="/images/ai-icon.png"
+                            alt="AI Assistant"
+                            className="w-4 h-4 mt-0.5 flex-shrink-0 object-contain"
+                          />
                         )}
                         <div className="whitespace-pre-wrap text-sm">
                           {message.content}
@@ -146,7 +154,11 @@ export default function AIMascot({ getCurrentWriting }: AIMascotProps) {
                   <div className="flex justify-start">
                     <div className="bg-gray-100 text-gray-800 rounded-lg px-3 py-2">
                       <div className="flex items-center space-x-2">
-                        <Bot className="w-4 h-4" />
+                        <img
+                          src="/images/ai-icon.png"
+                          alt="AI Assistant"
+                          className="w-4 h-4 object-contain"
+                        />
                         <div className="flex space-x-1">
                           <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
                           <div
