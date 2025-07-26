@@ -5,12 +5,13 @@ import type React from "react";
 import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
-import { ArrowLeft, Menu, Clock, SaveIcon } from "lucide-react";
+import { ArrowLeft, Clock, SaveIcon } from "lucide-react";
 import Link from "next/link";
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { Placeholder } from "@tiptap/extensions";
 import { Message } from "ai";
+import AIMascot from "./ai-mascot";
 
 export interface WritingEditorProps {
   defaultChatMessages: Message[];
@@ -23,6 +24,7 @@ export default function WritingEditor({
   const [antiHumanMode, setAntiHumanMode] = useState(false);
   const [timeElapsed, setTimeElapsed] = useState(0);
   const [isWriting, setIsWriting] = useState(false);
+  const [isChatOpen, setIsChatOpen] = useState(false);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   // TipTap 编辑器配置
@@ -94,6 +96,16 @@ export default function WritingEditor({
         `作品已保存！\n字数：${wordCount}\n用时：${formatTime(timeElapsed)}`
       );
     }
+  };
+
+  // 切换对话状态
+  const toggleChat = () => {
+    setIsChatOpen(!isChatOpen);
+  };
+
+  // 获取当前写作内容
+  const getCurrentWriting = () => {
+    return editor ? editor.getText() : "";
   };
 
   return (
@@ -183,12 +195,8 @@ export default function WritingEditor({
         </span>
       </div>
 
-      {/* 右下角吉祥物 */}
-      <div className="fixed bottom-6 right-6">
-        <div className="w-24 h-24 rounded-full flex items-center justify-center cursor-pointer hover:scale-110 transition-transform">
-          <img src="/images/ai-icon.png" />
-        </div>
-      </div>
+      {/* AI吉祥物 */}
+      <AIMascot getCurrentWriting={getCurrentWriting} />
 
       {/* TipTap 编辑器自定义样式 */}
       <style jsx global>{`
