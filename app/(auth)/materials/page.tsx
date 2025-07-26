@@ -19,8 +19,8 @@ export default function Materials() {
         "这篇文章描述了我和春天的美丽邂逅，白雪皑皑，温暖如春的感受...",
       date: "2023年4月12日",
       category: "记叙文",
-      level: "青春",
-      score: 92.2,
+      level: "美文",
+
       type: "记叙文",
     },
     {
@@ -30,7 +30,7 @@ export default function Materials() {
       date: "2023年5月20日",
       category: "议论文",
       level: "升华",
-      score: 0,
+
       type: "议论文",
     },
     {
@@ -40,7 +40,7 @@ export default function Materials() {
       date: "2023年3月8日",
       category: "读后感",
       level: "深度",
-      score: 95.2,
+
       type: "读后感",
     },
     {
@@ -48,9 +48,9 @@ export default function Materials() {
       description:
         "这篇文章生动描述了春天的美丽景色，春天的花朵，春天的温暖，春天的生机...",
       date: "2023年6月8日",
-      category: "描写文",
+      category: "散文",
       level: "美文",
-      score: 90.9,
+
       type: "描写文",
     },
     {
@@ -60,7 +60,7 @@ export default function Materials() {
       date: "2023年2月10日",
       category: "说明文",
       level: "传统文化",
-      score: 93.9,
+
       type: "说明文",
     },
   ];
@@ -77,30 +77,45 @@ export default function Materials() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* 顶部导航 */}
-      <div className="bg-white border-b border-gray-200 px-8 py-4">
-        <div className="flex items-center space-x-4">
-          <Link href="/">
-            <Button variant="ghost" size="sm" className="text-gray-600">
-              <ArrowLeft className="w-4 h-4 mr-2" />
-            </Button>
-          </Link>
-          <h1 className="text-xl font-bold text-gray-800">写作素材库</h1>
-        </div>
+    <div className="min-h-screen bg-gradient-to-br from-gray-100 via-orange-50 to-red-50 flex items-center justify-center relative overflow-hidden p-4">
+      {/* 背景橙色圆点装饰 */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div
+          className="absolute top-20 left-20 w-32 h-32 bg-[#E54A2B] rounded-full opacity-10 animate-bounce"
+          style={{ animationDelay: "0s", animationDuration: "12s" }}
+        ></div>
+        <div
+          className="absolute top-40 right-32 w-24 h-24 bg-[#E54A2B] rounded-full opacity-15 animate-bounce"
+          style={{ animationDelay: "4s", animationDuration: "15s" }}
+        ></div>
+        <div
+          className="absolute bottom-32 left-32 w-20 h-20 bg-[#E54A2B] rounded-full opacity-10 animate-bounce"
+          style={{ animationDelay: "8s", animationDuration: "14s" }}
+        ></div>
+        <div
+          className="absolute top-1/3 right-1/4 w-2 h-2 bg-[#E54A2B] rounded-full animate-ping"
+          style={{ animationDelay: "0.5s" }}
+        ></div>
+        <div
+          className="absolute bottom-1/3 left-1/4 w-3 h-3 bg-[#E54A2B] rounded-full animate-ping"
+          style={{ animationDelay: "1.5s" }}
+        ></div>
       </div>
 
-      {/* 搜索和筛选 */}
-      <div className="bg-white border-b border-gray-200 px-8 py-4">
-        <div className="flex items-center space-x-4">
-          <div className="relative flex-1 max-w-md">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-            <Input
-              placeholder="搜索作品标题、综合类内容..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 h-10 bg-gray-50 border-0 rounded-lg"
-            />
+      {/* 主体内容卡片 */}
+      <div className="relative z-10 w-full max-w-6xl bg-white/95 rounded-3xl shadow-2xl border-2 border-orange-100 p-8">
+        {/* 顶部导航 */}
+        <div className="mb-8">
+          <div className="flex items-center space-x-4">
+            <Link href="/">
+              <Button variant="ghost" size="sm" className="text-gray-600">
+                <ArrowLeft className="w-4 h-4 mr-2" />
+              </Button>
+            </Link>
+            <div className="w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center">
+              <span className="text-orange-600 font-bold text-lg">✏️</span>
+            </div>
+            <h1 className="text-xl font-bold text-gray-800">写作素材库</h1>
           </div>
           <Button
             variant="outline"
@@ -121,10 +136,41 @@ export default function Materials() {
             标签 ▼
           </Button>
         </div>
-      </div>
 
-      {/* 主要内容 */}
-      <div className="p-8">
+        {/* 搜索和筛选 */}
+        <div className="mb-8">
+          <div className="flex items-center space-x-4">
+            <div className="relative flex-1 max-w-md">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+              <Input
+                placeholder="搜索作品标题、综合类内容..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10 h-10 bg-gray-50 border-0 rounded-lg"
+              />
+            </div>
+            <Button
+              variant="outline"
+              className="h-10 px-4 rounded-lg bg-transparent"
+            >
+              日期 ▼
+            </Button>
+            <Button
+              variant="outline"
+              className="h-10 px-4 rounded-lg bg-transparent"
+            >
+              练习类型 ▼
+            </Button>
+            <Button
+              variant="outline"
+              className="h-10 px-4 rounded-lg bg-yellow-100 text-yellow-700 border-yellow-200"
+            >
+              标签 ▼
+            </Button>
+          </div>
+        </div>
+
+        {/* 主要内容 */}
         <div className="grid grid-cols-2 gap-6 mb-8">
           {materials.map((material, index) => (
             <Card
@@ -183,7 +229,7 @@ export default function Materials() {
         {/* 空状态提示 */}
         <div className="text-center py-12">
           <div className="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <span className="text-2xl">📝</span>
+            <span className="text-2xl">✏️</span>
           </div>
           <h3 className="text-lg font-medium text-gray-800 mb-2">
             你的素材库还是空的
