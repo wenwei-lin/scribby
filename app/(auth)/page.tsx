@@ -68,22 +68,8 @@ export default function Dashboard() {
         ></div>
       </div>
 
-      {/* 左上角用户信息 */}
-      <div className="absolute top-6 left-8 z-10">
-        <div className="flex items-center space-x-3">
-          <div className="w-12 h-12 bg-gradient-to-br from-[#E54A2B] to-[#D84315] rounded-full flex items-center justify-center shadow-lg hover:shadow-xl transition-shadow duration-300 border-2 border-[#FE5933]">
-            <span className="text-white font-bold text-lg">X</span>
-          </div>
-          <div className="flex flex-col">
-            <span className="text-gray-800 font-semibold text-lg">
-              XiaoMing
-            </span>
-          </div>
-        </div>
-      </div>
-
       {/* 主要内容区域 */}
-      <div className="pt-20 px-12">
+      <div className="pt-8 px-12">
         <div className="bg-white/90 backdrop-blur-sm rounded-3xl shadow-2xl p-8 min-h-screen relative border border-white/20">
           {/* 装饰性背景图案 */}
           <div className="absolute inset-0 opacity-5">

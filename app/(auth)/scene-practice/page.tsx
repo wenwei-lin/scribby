@@ -8,27 +8,14 @@ import Image from "next/image";
 export default function ScenePractice() {
   const scenes = [
     {
-      description: "妈妈的动作，厨房的环境，阳光照射的感觉，餐具的摆放...",
-      image: "/images/kitchen-scene.png",
+      description: "过生日",
+      image: "/images/scenes/birthday-cover.png",
       bgColor: "bg-gradient-to-br from-orange-100 to-orange-200",
     },
     {
-      description:
-        "煎饼的香气，摊主的手艺，路客的表情，街道的热闹，早晨的温度...",
-      image: "/images/street-food.png",
+      description: "图书馆",
+      image: "/images/scenes/library-cover.jpeg",
       bgColor: "bg-gradient-to-br from-yellow-100 to-yellow-200",
-    },
-    {
-      description:
-        "欢声笑语，运动的学生，开放的操场，不同学生的活动，天空的颜色...",
-      image: "/images/school-playground.png",
-      bgColor: "bg-gradient-to-br from-purple-100 to-purple-200",
-    },
-    {
-      description:
-        "南后花园的生气勃勃，水滴的声音，植物的颜色变化，小动物的活动，光线的变化...",
-      image: "/images/garden-scene.png",
-      bgColor: "bg-gradient-to-br from-green-100 to-green-200",
     },
   ];
 
