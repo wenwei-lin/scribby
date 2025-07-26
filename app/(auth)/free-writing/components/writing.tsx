@@ -182,8 +182,8 @@ export default function WritingEditor() {
 
       {/* 右下角吉祥物 */}
       <div className="fixed bottom-6 right-6">
-        <div className="w-16 h-16 bg-yellow-400 rounded-full flex items-center justify-center shadow-lg cursor-pointer hover:scale-110 transition-transform">
-          <div className="text-2xl">👑</div>
+        <div className="w-24 h-24 rounded-full flex items-center justify-center cursor-pointer hover:scale-110 transition-transform">
+          <img src="/images/ai-icon.png" />
         </div>
       </div>
     </div>
