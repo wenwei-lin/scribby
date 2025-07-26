@@ -80,7 +80,6 @@ export async function POST(request: NextRequest) {
       "Objects", // 物体检测
       "Tags", // 标签
       "Read", // 文字识别
-      "DenseCaptions", // 密集描述（区域描述）
     ];
 
     // 调用 Azure Vision API
@@ -91,7 +90,7 @@ export async function POST(request: NextRequest) {
       queryParameters: {
         features: features,
         "model-version": "latest",
-        language: "zh", // 中文输出
+        // 移除语言参数，使用默认英文（避免语言不支持的错误）
       },
       contentType: "application/json",
     });
