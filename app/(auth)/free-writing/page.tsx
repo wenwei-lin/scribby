@@ -15,15 +15,7 @@ import WritingEditor from "../../../components/modules/writing/writing";
 export default function FreeWriting() {
   const [questions, setQuestions] = useState<string[]>([]);
   const [answers, setAnswers] = useState<Record<string, string>>({});
-  const [writingPrompt, setWritingPrompt] = useState<FreeWritingQuestion>({
-    topic: "与日出对话",
-    genre: "诗歌",
-    points: [
-      "从日出开始，探索一天中最美好的时刻",
-      "以诗歌形式表达与日出的对话",
-      "从日出的视角，感受它带来的希望与新生",
-    ],
-  });
+  const [writingPrompt, setWritingPrompt] = useState<FreeWritingQuestion>();
   const [startWriting, setStartWriting] = useState(false);
   const [showCardContent, setShowCardContent] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);

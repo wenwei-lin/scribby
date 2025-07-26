@@ -13,6 +13,7 @@ import { Placeholder } from "@tiptap/extensions";
 import Highlight from "@tiptap/extension-highlight";
 import { Message } from "ai";
 import AIMascot from "./ai-mascot";
+import { Toast } from "@/utils/toast";
 
 interface AnalysisResult {
   highlights: Array<{
@@ -199,7 +200,7 @@ export default function WritingEditor({
   // 分析文本并应用高亮
   const analyzeText = async () => {
     if (!editor || !editor.getText().trim()) {
-      alert("请先输入一些内容再进行分析");
+      Toast.error("请先输入一些内容再进行分析");
       return;
     }
 
@@ -225,7 +226,7 @@ export default function WritingEditor({
       applyHighlights(result);
     } catch (error) {
       console.error("Error analyzing text:", error);
-      alert("分析失败，请稍后重试");
+      Toast.error("分析失败，请稍后重试");
     } finally {
       setIsAnalyzing(false);
     }
@@ -323,11 +324,7 @@ export default function WritingEditor({
   const handleSave = async () => {
     if (editor && editor.getText().trim()) {
       await analyzeText();
-      alert(
-        `作品已保存并分析完成！\n字数：${wordCount}\n用时：${formatTime(
-          timeElapsed
-        )}\n\n橙色高亮：精彩句子\n红色下划线：可改进句子\n蓝色圆圈：动词替换建议\n\n点击高亮文本查看AI评价`
-      );
+      Toast.success(`作品已保存并分析完成，点击高亮文本查看AI评价！`);
     }
   };
 
