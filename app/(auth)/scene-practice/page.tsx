@@ -4,21 +4,9 @@ import { Card, CardContent } from "@/components/ui/card";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+import { SCENES } from "./constant";
 
 export default function ScenePractice() {
-  const scenes = [
-    {
-      description: "过生日",
-      image: "/images/scenes/birthday-cover.png",
-      bgColor: "bg-gradient-to-br from-orange-100 to-orange-200",
-    },
-    {
-      description: "图书馆",
-      image: "/images/scenes/library-cover.jpeg",
-      bgColor: "bg-gradient-to-br from-yellow-100 to-yellow-200",
-    },
-  ];
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-100 via-orange-50 to-red-50 flex items-center justify-center relative overflow-hidden p-4">
       {/* 背景橙色圆点装饰 */}
@@ -72,27 +60,29 @@ export default function ScenePractice() {
         </div>
 
         <div className="grid grid-cols-2 gap-8">
-          {scenes.map((scene, index) => (
-            <Card
-              key={index}
-              className={`${scene.bgColor} border-0 cursor-pointer hover:shadow-lg transition-all duration-300 hover:scale-105`}
-            >
-              <CardContent className="p-0">
-                <div className="relative h-64 rounded-t-lg overflow-hidden">
-                  <Image
-                    src={scene.image || "/placeholder.svg"}
-                    alt={scene.description}
-                    fill
-                    className="object-cover"
-                  />
-                </div>
-                <div className="p-6">
-                  <p className="text-gray-600 text-sm leading-relaxed">
-                    {scene.description}
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
+          {SCENES.map((scene, index) => (
+            <Link href={`/scene-practice/${scene.id}`} key={index}>
+              <Card
+                key={index}
+                className={`${scene.bgColor} border-0 cursor-pointer hover:shadow-lg transition-all duration-300 hover:scale-105`}
+              >
+                <CardContent className="p-0">
+                  <div className="relative h-64 rounded-t-lg overflow-hidden">
+                    <Image
+                      src={scene.image || "/placeholder.svg"}
+                      alt={scene.description}
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                  <div className="p-6">
+                    <p className="text-gray-600 text-base leading-relaxed font-semibold text-center">
+                      {scene.description}
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+            </Link>
           ))}
         </div>
       </div>
