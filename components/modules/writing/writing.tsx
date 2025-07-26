@@ -52,10 +52,14 @@ interface TooltipData {
 
 export interface WritingEditorProps {
   defaultChatMessages: Message[];
+  backPath?: string;
+  showAntiHumanMode?: boolean;
 }
 
 export default function WritingEditor({
   defaultChatMessages,
+  backPath = "/",
+  showAntiHumanMode = false,
 }: WritingEditorProps) {
   const [wordCount, setWordCount] = useState(0);
   const [antiHumanMode, setAntiHumanMode] = useState(false);
@@ -358,7 +362,7 @@ export default function WritingEditor({
     <div className="min-h-screen bg-gradient-to-br from-yellow-200 via-orange-200 to-orange-300 relative overflow-hidden">
       {/* 顶部导航栏 */}
       <div className="flex items-center justify-between p-6">
-        <Link href="/">
+        <Link href={backPath}>
           <Button
             variant="ghost"
             size="sm"
@@ -369,8 +373,7 @@ export default function WritingEditor({
         </Link>
 
         <Button
-          variant="ghost"
-          size="sm"
+          variant="default"
           className="text-gray-700 hover:bg-white/20 rounded-xl"
           onClick={handleSave}
           disabled={isAnalyzing}
@@ -381,7 +384,10 @@ export default function WritingEditor({
               <span className="text-sm">分析中...</span>
             </div>
           ) : (
-            <SaveIcon className="w-5 h-5" />
+            <div className="flex items-center space-x-2">
+              <SaveIcon className="w-5 h-5" />
+              <span className="text">AI分析</span>
+            </div>
           )}
         </Button>
       </div>
@@ -400,14 +406,16 @@ export default function WritingEditor({
 
         <div className="flex items-center space-x-6">
           {/* 反人类模式开关 */}
-          <div className="flex items-center space-x-3">
-            <span className="text-gray-700 font-medium">反人类模式</span>
-            <Switch
-              checked={antiHumanMode}
-              onCheckedChange={toggleAntiHumanMode}
-              className="data-[state=checked]:bg-[#FE5933]"
-            />
-          </div>
+          {showAntiHumanMode && (
+            <div className="flex items-center space-x-3">
+              <span className="text-gray-700 font-medium">反人类模式</span>
+              <Switch
+                checked={antiHumanMode}
+                onCheckedChange={toggleAntiHumanMode}
+                className="data-[state=checked]:bg-[#FE5933]"
+              />
+            </div>
+          )}
 
           {/* 计时器 */}
           <div className="flex items-center space-x-2 bg-white/30 px-4 py-2 rounded-full">

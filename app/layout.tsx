@@ -5,9 +5,9 @@ import "./globals.css";
 import { Toaster } from "sonner";
 
 export const metadata: Metadata = {
-  title: "v0 App",
-  description: "Created with v0",
-  generator: "v0.dev",
+  title: "Noodling | 授笔漫步",
+  description: "授笔漫步，让写作更简单",
+  generator: "Noodling",
 };
 
 export default function RootLayout({
@@ -25,6 +25,7 @@ html {
   --font-mono: ${GeistMono.variable};
 }
         `}</style>
+        <link rel="icon" href="/favicon.ico" />
       </head>
       <body>
         <main>{children}</main>
