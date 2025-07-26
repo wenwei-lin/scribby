@@ -85,8 +85,9 @@ export default function WritingEditor({
     editorProps: {
       attributes: {
         class:
-          "w-full h-full min-h-[450px] resize-none border-none outline-none text-lg leading-relaxed text-gray-700 placeholder-gray-400 bg-transparent focus:outline-none",
-        style: "font-family: system-ui, -apple-system, sans-serif;",
+          "w-full h-full min-h-[450px] resize-none border-none outline-none text-lg leading-relaxed text-gray-700 placeholder-gray-400 bg-transparent focus:outline-none overflow-y-auto",
+        style:
+          "font-family: system-ui, -apple-system, sans-serif; touch-action: pan-y; -webkit-overflow-scrolling: touch;",
       },
       handleClick: (view, pos, event) => {
         // 检查点击的位置是否有高亮
@@ -400,10 +401,12 @@ export default function WritingEditor({
               className="w-full h-full"
             />
             <div className="absolute top-0 left-0 w-full h-full p-24">
-              <EditorContent
-                editor={editor}
-                className="w-full h-full min-h-[450px]"
-              />
+              <div className="w-full h-full overflow-y-auto overflow-x-hidden scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent">
+                <EditorContent
+                  editor={editor}
+                  className="w-full h-full min-h-[450px] touch-pan-y"
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -476,6 +479,98 @@ export default function WritingEditor({
           font-size: 1.25rem;
           line-height: 1.75;
           color: #374151;
+          overflow-y: auto;
+          touch-action: pan-y;
+          -webkit-overflow-scrolling: touch;
+          scroll-behavior: smooth;
+        }
+
+        /* 滚动条样式 - 默认隐藏 */
+        .ProseMirror::-webkit-scrollbar {
+          width: 6px;
+          opacity: 0;
+          transition: opacity 0.3s ease;
+        }
+
+        .ProseMirror::-webkit-scrollbar-track {
+          background: transparent;
+        }
+
+        .ProseMirror::-webkit-scrollbar-thumb {
+          background: rgba(156, 163, 175, 0.5);
+          border-radius: 3px;
+        }
+
+        .ProseMirror::-webkit-scrollbar-thumb:hover {
+          background: rgba(156, 163, 175, 0.8);
+        }
+
+        /* 滚动时显示滚动条 */
+        .ProseMirror:hover::-webkit-scrollbar {
+          opacity: 1;
+        }
+
+        .ProseMirror:focus::-webkit-scrollbar {
+          opacity: 1;
+        }
+
+        /* 触摸滚动优化 */
+        @supports (-webkit-touch-callout: none) {
+          .ProseMirror {
+            -webkit-overflow-scrolling: touch;
+            overscroll-behavior-y: contain;
+          }
+        }
+
+        /* 滚动容器样式 - 默认隐藏 */
+        .scrollbar-thin::-webkit-scrollbar {
+          width: 4px;
+          opacity: 0;
+          transition: opacity 0.3s ease;
+        }
+
+        .scrollbar-thin::-webkit-scrollbar-track {
+          background: transparent;
+        }
+
+        .scrollbar-thumb-gray-300::-webkit-scrollbar-thumb {
+          background: rgba(209, 213, 219, 0.6);
+          border-radius: 2px;
+        }
+
+        .scrollbar-thumb-gray-300::-webkit-scrollbar-thumb:hover {
+          background: rgba(209, 213, 219, 0.9);
+        }
+
+        /* 悬浮时显示滚动条 */
+        .scrollbar-thin:hover::-webkit-scrollbar {
+          opacity: 1;
+        }
+
+        /* 移动端触摸优化 */
+        .touch-pan-y {
+          touch-action: pan-y;
+          -webkit-overflow-scrolling: touch;
+          overscroll-behavior: contain;
+        }
+
+        /* 完全隐藏滚动条的备用方案 */
+        .ProseMirror {
+          scrollbar-width: none; /* Firefox */
+          -ms-overflow-style: none; /* IE/Edge */
+        }
+
+        .scrollbar-thin {
+          scrollbar-width: none; /* Firefox */
+          -ms-overflow-style: none; /* IE/Edge */
+        }
+
+        /* 移动端滚动条隐藏 */
+        @media (max-width: 768px) {
+          .ProseMirror::-webkit-scrollbar,
+          .scrollbar-thin::-webkit-scrollbar {
+            display: none;
+          }
         }
 
         /* 高亮样式 */
