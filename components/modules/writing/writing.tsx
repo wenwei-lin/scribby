@@ -30,6 +30,14 @@ interface AnalysisResult {
     start: number;
     end: number;
   }>;
+  verbReplacements: Array<{
+    text: string;
+    type: "verb";
+    comment: string;
+    suggestion: string;
+    start: number;
+    end: number;
+  }>;
 }
 
 interface TooltipData {
@@ -38,7 +46,7 @@ interface TooltipData {
   y: number;
   comment: string;
   suggestion?: string;
-  type: "excellent" | "improvement";
+  type: "excellent" | "improvement" | "verb";
 }
 
 export interface WritingEditorProps {
@@ -105,10 +113,20 @@ export default function WritingEditor({
           const rect = clickedElement.getBoundingClientRect();
 
           // 根据高亮颜色判断类型
-          const isExcellent = highlightMark.attrs.color === "#fb923c";
-          const dataList = isExcellent
-            ? analysisResult.highlights
-            : analysisResult.improvements;
+          const color = highlightMark.attrs.color;
+          let dataList;
+          let type: "excellent" | "improvement" | "verb";
+
+          if (color === "#fb923c") {
+            dataList = analysisResult.highlights;
+            type = "excellent";
+          } else if (color === "#ffff00") {
+            dataList = analysisResult.verbReplacements;
+            type = "verb";
+          } else {
+            dataList = analysisResult.improvements;
+            type = "improvement";
+          }
 
           // 查找对应的分析数据
           const data = dataList.find((item) => {
@@ -123,7 +141,7 @@ export default function WritingEditor({
               y: rect.top - 10,
               comment: data.comment,
               suggestion: "suggestion" in data ? data.suggestion : undefined,
-              type: data.type as "excellent" | "improvement",
+              type: type,
             });
           }
         } else {
@@ -284,6 +302,20 @@ export default function WritingEditor({
       });
     });
 
+    // 应用动词替换的圆圈样式
+    result.verbReplacements.forEach((verb) => {
+      const positions = findTextPosition(verb.text);
+      positions.forEach(({ start, end }) => {
+        tr = tr.addMark(
+          start,
+          end,
+          state.schema.marks.highlight.create({
+            color: "#ffff00", // 使用黄色测试，确保高亮功能工作
+          })
+        );
+      });
+    });
+
     dispatch(tr);
   };
 
@@ -294,7 +326,7 @@ export default function WritingEditor({
       alert(
         `作品已保存并分析完成！\n字数：${wordCount}\n用时：${formatTime(
           timeElapsed
-        )}\n\n橙色高亮：精彩句子\n下划线：可改进句子\n点击高亮文本查看AI评价`
+        )}\n\n橙色高亮：精彩句子\n红色下划线：可改进句子\n蓝色圆圈：动词替换建议\n\n点击高亮文本查看AI评价`
       );
     }
   };
@@ -436,11 +468,19 @@ export default function WritingEditor({
             <div className="flex items-center space-x-2">
               <div
                 className={`w-3 h-3 rounded-full ${
-                  tooltip.type === "excellent" ? "bg-orange-400" : "bg-blue-400"
+                  tooltip.type === "excellent"
+                    ? "bg-orange-400"
+                    : tooltip.type === "verb"
+                    ? "bg-blue-400"
+                    : "bg-red-400"
                 }`}
               />
               <span className="font-medium">
-                {tooltip.type === "excellent" ? "精彩句子" : "可改进"}
+                {tooltip.type === "excellent"
+                  ? "精彩句子"
+                  : tooltip.type === "verb"
+                  ? "动词替换"
+                  : "可改进"}
               </span>
             </div>
             <p className="text-white/90">{tooltip.comment}</p>
@@ -601,6 +641,52 @@ export default function WritingEditor({
         .ProseMirror mark.highlight[data-color="transparent"]:hover {
           border-bottom-color: #dc2626 !important;
           background-color: rgba(239, 68, 68, 0.1) !important;
+        }
+
+        /* 圆圈样式（用于动词替换） - 黄色高亮显示为蓝色圆圈 */
+        .ProseMirror mark[data-color="#ffff00"],
+        .ProseMirror mark.highlight[data-color="#ffff00"],
+        .ProseMirror mark[style*="#ffff00"],
+        .ProseMirror mark[style*="background-color: #ffff00"],
+        .ProseMirror mark[style*="background: #ffff00"] {
+          background-color: transparent !important;
+          border: 2px solid #3b82f6 !important;
+          border-radius: 15px !important;
+          padding: 1px 4px !important;
+          margin: 0 1px !important;
+          display: inline-block !important;
+          text-decoration: none !important;
+          color: inherit !important;
+        }
+
+        .ProseMirror mark[data-color="#ffff00"]:hover,
+        .ProseMirror mark.highlight[data-color="#ffff00"]:hover,
+        .ProseMirror mark[style*="#ffff00"]:hover {
+          border-color: #1d4ed8 !important;
+          background-color: rgba(59, 130, 246, 0.1) !important;
+          transform: scale(1.02) !important;
+        }
+
+        /* 通用圆圈样式类（备用方案） */
+        .verb-circle {
+          background-color: transparent !important;
+          border: 2px solid #3b82f6 !important;
+          border-radius: 15px !important;
+          padding: 1px 4px !important;
+          margin: 0 1px !important;
+          display: inline-block !important;
+          text-decoration: none !important;
+        }
+
+        .verb-circle:hover {
+          border-color: #1d4ed8 !important;
+          background-color: rgba(59, 130, 246, 0.1) !important;
+          transform: scale(1.02) !important;
+        }
+
+        /* 标记元素的基础样式 */
+        .ProseMirror mark {
+          position: relative;
         }
 
         .ProseMirror p {

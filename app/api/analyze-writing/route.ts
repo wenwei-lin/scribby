@@ -24,6 +24,16 @@ const analysisSchema = z.object({
       end: z.number(),
     })
   ),
+  verbReplacements: z.array(
+    z.object({
+      text: z.string(),
+      type: z.literal("verb"),
+      comment: z.string(),
+      suggestion: z.string(),
+      start: z.number(),
+      end: z.number(),
+    })
+  ),
 });
 
 export async function POST(req: NextRequest) {
@@ -43,13 +53,14 @@ export async function POST(req: NextRequest) {
       prompt: `你是一个专业的写作分析师。请分析以下写作内容，识别出：
 
 1. 精彩的句子或短语（语言优美、表达生动、有深度的部分）
-2. 需要改进的句子或短语（语法问题、表达不清、可以优化的部分）
+2. 需要改进的句子或短语（语法问题、表达不清、可以优化的部分）  
+3. 可以替换的动词（用词不够准确、生动或有力的动词）
 
 分析内容：
 ${content}
 
 要求：
-- 精选最有代表性的句子，highlights和improvements各选择2-4个
+- 精选最有代表性的内容，highlights、improvements、verbReplacements各选择2-4个
 - 评价要具体和有建设性
 - text字段要与原文完全一致
 - start和end是在原文中的字符位置索引
@@ -59,6 +70,8 @@ ${content}
 重要：
 - highlights数组中每个对象的type字段必须是"excellent"
 - improvements数组中每个对象的type字段必须是"improvement"
+- verbReplacements数组中每个对象的type字段必须是"verb"
+- 动词替换要重点关注提升表达力度和准确性
 - 不要使用其他type值，严格按照要求`,
     });
 
