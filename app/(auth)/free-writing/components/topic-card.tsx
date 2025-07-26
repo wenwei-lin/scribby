@@ -29,7 +29,7 @@ export default function TopicCard({
       <div
         className={`fixed transition-all duration-700 ease-in-out z-40 ${
           isMinimized
-            ? "bottom-6 right-16 scale-[0.3] origin-bottom-right cursor-pointer hover:scale-[0.35]"
+            ? "bottom-6 left-16 scale-[0.3] origin-bottom-left cursor-pointer hover:scale-[0.35]"
             : "top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 scale-100"
         }`}
         onClick={isMinimized ? onShowCard : onHideCard}
@@ -120,11 +120,7 @@ export default function TopicCard({
 
       {/* 底部操作按钮 - 只在非最小化状态显示 */}
       {!isMinimized && (
-        <div
-          className={`fixed top-1/2 left-1/2 -translate-x-1/2 translate-y-48 flex items-center justify-between w-96 transition-opacity duration-500 ${
-            showContent ? "opacity-100" : "opacity-0"
-          }`}
-        >
+        <div className="fixed bottom-24 left-1/2 -translate-x-1/2 flex items-center justify-between w-96 transition-opacity duration-500 opacity-100">
           <Link href="/free-writing">
             <Button
               variant="outline"
@@ -147,7 +143,7 @@ export default function TopicCard({
 
       {/* 最小化状���的提示 */}
       {isMinimized && (
-        <div className="fixed bottom-20 right-16 bg-white/90 backdrop-blur-sm rounded-lg px-3 py-2 shadow-lg z-30 animate-bounce">
+        <div className="fixed bottom-24 left-[72px] bg-white/90 backdrop-blur-sm rounded-lg px-3 py-2 shadow-lg z-50 animate-bounce">
           <p className="text-xs text-gray-600">点击查看主题</p>
         </div>
       )}
