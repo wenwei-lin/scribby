@@ -1,11 +1,10 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ArrowLeft, Camera, Upload, Loader2 } from "lucide-react";
 import Link from "next/link";
-import Image from "next/image";
 
 export default function PhotoPractice() {
   const [selectedImage, setSelectedImage] = useState(
@@ -14,7 +13,10 @@ export default function PhotoPractice() {
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const [analysisResult, setAnalysisResult] = useState<any>(null);
+  const [imageInfo, setImageInfo] = useState<any>(null);
+  const [showBoundingBoxes, setShowBoundingBoxes] = useState(true);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const imageRef = useRef<HTMLImageElement>(null);
 
   // 处理文件选择
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -24,6 +26,70 @@ export default function PhotoPractice() {
       // 创建预览URL
       const previewUrl = URL.createObjectURL(file);
       setSelectedImage(previewUrl);
+      // 清除之前的分析结果
+      setAnalysisResult(null);
+      setImageInfo(null);
+    }
+  };
+
+  // 处理图片加载，获取图片真实尺寸
+  const handleImageLoad = () => {
+    if (imageRef.current) {
+      const img = imageRef.current;
+      setImageInfo({
+        naturalWidth: img.naturalWidth,
+        naturalHeight: img.naturalHeight,
+        displayWidth: img.clientWidth,
+        displayHeight: img.clientHeight,
+      });
+    }
+  };
+
+  // 计算边界框在显示图片中的位置
+  const calculateBoundingBox = (bbox: any) => {
+    if (!imageInfo) return null;
+
+    const scaleX = imageInfo.displayWidth / imageInfo.naturalWidth;
+    const scaleY = imageInfo.displayHeight / imageInfo.naturalHeight;
+
+    // 计算图片在容器中的偏移（居中显示）
+    const containerWidth = imageRef.current?.parentElement?.clientWidth || 0;
+    const containerHeight = imageRef.current?.parentElement?.clientHeight || 0;
+    const offsetX = (containerWidth - imageInfo.displayWidth) / 2;
+    const offsetY = (containerHeight - imageInfo.displayHeight) / 2;
+
+    return {
+      left: bbox.x * scaleX + offsetX,
+      top: bbox.y * scaleY + offsetY,
+      width: bbox.w * scaleX,
+      height: bbox.h * scaleY,
+    };
+  };
+
+  // 计算提示气泡的位置（避免超出屏幕）
+  const calculateTooltipPosition = (
+    boundingBox: any,
+    containerWidth: number
+  ) => {
+    const tooltipWidth = 300; // 估计的提示框宽度
+    const rightSpace = containerWidth - (boundingBox.left + boundingBox.width);
+
+    if (rightSpace >= tooltipWidth + 20) {
+      // 右侧有足够空间，显示在右侧
+      return {
+        left: `${boundingBox.left + boundingBox.width + 10}px`,
+        top: `${boundingBox.top}px`,
+        arrowClass: "left-0 transform -translate-x-2",
+        arrowDirection: "border-r-purple-100",
+      };
+    } else {
+      // 右侧空间不足，显示在左侧
+      return {
+        left: `${boundingBox.left - tooltipWidth - 10}px`,
+        top: `${boundingBox.top}px`,
+        arrowClass: "right-0 transform translate-x-2",
+        arrowDirection: "border-l-purple-100",
+      };
     }
   };
 
@@ -66,6 +132,23 @@ export default function PhotoPractice() {
   const triggerFileSelect = () => {
     fileInputRef.current?.click();
   };
+
+  // 监听窗口大小变化，重新计算图片信息
+  useEffect(() => {
+    const handleResize = () => {
+      handleImageLoad();
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  // 当分析结果变化时，重新计算图片信息
+  useEffect(() => {
+    if (analysisResult?.enhancedObjects) {
+      setTimeout(handleImageLoad, 100); // 稍微延迟确保图片已渲染
+    }
+  }, [analysisResult]);
 
   const writingPrompts = [
     {
@@ -124,51 +207,138 @@ export default function PhotoPractice() {
           <div className="relative mb-8">
             <Card className="border-0 shadow-lg overflow-hidden">
               <CardContent className="p-0">
-                <div className="relative h-96 bg-gradient-to-br from-blue-100 to-blue-200">
-                  <Image
+                <div
+                  className="relative bg-gray-50 flex items-center justify-center"
+                  style={{ minHeight: "500px" }}
+                >
+                  <img
+                    ref={imageRef}
                     src={selectedImage || "/placeholder.svg"}
                     alt="Practice image"
-                    fill
-                    className="object-cover"
+                    className="max-w-full max-h-[500px] object-contain"
+                    onLoad={handleImageLoad}
                   />
 
-                  {/* 写作提示气泡 */}
-                  {writingPrompts.map((prompt, index) => (
-                    <div
-                      key={index}
-                      className={`absolute ${prompt.position} transform -translate-x-1/2 -translate-y-1/2`}
-                    >
+                  {/* AI识别的边界框和提示 */}
+                  {analysisResult?.enhancedObjects &&
+                    imageInfo &&
+                    showBoundingBoxes &&
+                    analysisResult.enhancedObjects.map(
+                      (obj: any, index: number) => {
+                        const boundingBox = calculateBoundingBox(
+                          obj.boundingBox
+                        );
+                        if (!boundingBox) return null;
+
+                        const containerWidth =
+                          imageRef.current?.parentElement?.clientWidth || 0;
+                        const tooltipPos = calculateTooltipPosition(
+                          boundingBox,
+                          containerWidth
+                        );
+
+                        return (
+                          <div key={index}>
+                            {/* 边界框 */}
+                            <div
+                              className="absolute border-2 border-red-500 bg-red-500 bg-opacity-10 hover:bg-opacity-20 transition-all duration-200"
+                              style={{
+                                left: `${boundingBox.left}px`,
+                                top: `${boundingBox.top}px`,
+                                width: `${boundingBox.width}px`,
+                                height: `${boundingBox.height}px`,
+                              }}
+                            >
+                              {/* 标签 */}
+                              <div className="absolute -top-6 left-0 bg-red-500 text-white text-xs px-2 py-1 rounded whitespace-nowrap shadow-md">
+                                {obj.name} #{obj.id} (
+                                {Math.round(obj.confidence * 100)}%)
+                              </div>
+                            </div>
+
+                            {/* 描写提示气泡 */}
+                            <div
+                              className="absolute z-10"
+                              style={{
+                                left: tooltipPos.left,
+                                top: tooltipPos.top,
+                              }}
+                            >
+                              <div className="bg-purple-100 text-purple-800 p-3 rounded-lg shadow-lg w-72 relative border border-purple-200">
+                                <div className="flex items-start space-x-2">
+                                  <div className="w-6 h-6 bg-white rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 shadow-sm">
+                                    <span className="text-xs">💡</span>
+                                  </div>
+                                  <div className="flex-1">
+                                    <h4 className="font-medium text-sm mb-1">
+                                      {obj.name} 描写提示
+                                    </h4>
+                                    <p className="text-xs leading-relaxed">
+                                      {obj.tip}
+                                    </p>
+                                  </div>
+                                </div>
+                                {/* 指向箭头 */}
+                                <div
+                                  className={`absolute top-4 ${tooltipPos.arrowClass}`}
+                                >
+                                  <div
+                                    className={`w-0 h-0 border-t-4 border-b-4 border-transparent ${
+                                      tooltipPos.arrowDirection.includes(
+                                        "border-r"
+                                      )
+                                        ? "border-r-8"
+                                        : "border-l-8"
+                                    } ${tooltipPos.arrowDirection}`}
+                                  ></div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      }
+                    )}
+
+                  {/* 原有的写作提示气泡（只在没有AI结果时显示） */}
+                  {!analysisResult?.enhancedObjects &&
+                    writingPrompts.map((prompt, index) => (
                       <div
-                        className={`${prompt.bgColor} ${prompt.textColor} p-3 rounded-lg shadow-md max-w-xs relative`}
+                        key={index}
+                        className={`absolute ${prompt.position} transform -translate-x-1/2 -translate-y-1/2`}
                       >
-                        <div className="flex items-start space-x-2">
-                          <div className="w-6 h-6 bg-white rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                            <span className="text-xs">📍</span>
+                        <div
+                          className={`${prompt.bgColor} ${prompt.textColor} p-3 rounded-lg shadow-md max-w-xs relative`}
+                        >
+                          <div className="flex items-start space-x-2">
+                            <div className="w-6 h-6 bg-white rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                              <span className="text-xs">📍</span>
+                            </div>
+                            <div>
+                              <h4 className="font-medium text-sm mb-1">
+                                {prompt.type}
+                              </h4>
+                              <p className="text-xs leading-relaxed">
+                                {prompt.content}
+                              </p>
+                            </div>
                           </div>
-                          <div>
-                            <h4 className="font-medium text-sm mb-1">
-                              {prompt.type}
-                            </h4>
-                            <p className="text-xs leading-relaxed">
-                              {prompt.content}
-                            </p>
-                          </div>
+                          {/* 心形图标 */}
+                          {index === 1 && (
+                            <div className="absolute -top-2 -right-2 w-6 h-6 bg-red-100 rounded-full flex items-center justify-center">
+                              <span className="text-red-500 text-xs">❤️</span>
+                            </div>
+                          )}
+                          {/* 位置图标 */}
+                          {index === 2 && (
+                            <div className="absolute -bottom-2 -left-2 w-6 h-6 bg-orange-100 rounded-full flex items-center justify-center">
+                              <span className="text-orange-500 text-xs">
+                                📍
+                              </span>
+                            </div>
+                          )}
                         </div>
-                        {/* 心形图标 */}
-                        {index === 1 && (
-                          <div className="absolute -top-2 -right-2 w-6 h-6 bg-red-100 rounded-full flex items-center justify-center">
-                            <span className="text-red-500 text-xs">❤️</span>
-                          </div>
-                        )}
-                        {/* 位置图标 */}
-                        {index === 2 && (
-                          <div className="absolute -bottom-2 -left-2 w-6 h-6 bg-orange-100 rounded-full flex items-center justify-center">
-                            <span className="text-orange-500 text-xs">📍</span>
-                          </div>
-                        )}
                       </div>
-                    </div>
-                  ))}
+                    ))}
                 </div>
               </CardContent>
             </Card>
@@ -205,6 +375,15 @@ export default function PhotoPractice() {
               )}
               {isUploading ? "分析中..." : "上传并分析"}
             </Button>
+            {analysisResult?.enhancedObjects && (
+              <Button
+                onClick={() => setShowBoundingBoxes(!showBoundingBoxes)}
+                variant="outline"
+                className="px-6 py-3 border-blue-200 text-blue-700 hover:bg-blue-50 bg-transparent"
+              >
+                {showBoundingBoxes ? "隐藏标记" : "显示标记"}
+              </Button>
+            )}
           </div>
 
           {/* 显示上传状态和结果提示 */}
@@ -216,92 +395,6 @@ export default function PhotoPractice() {
             </div>
           )}
 
-          {analysisResult && (
-            <div className="mt-6 max-w-2xl mx-auto">
-              <div className="text-center mb-4">
-                <p className="text-sm text-green-600">
-                  ✅ 图片分析完成！请查看控制台输出详细结果
-                </p>
-              </div>
-
-              {/* 分析结果摘要 */}
-              <Card className="bg-gradient-to-r from-blue-50 to-purple-50 border-0">
-                <CardContent className="p-4">
-                  <h3 className="font-semibold text-gray-800 mb-3">
-                    AI 分析结果摘要
-                  </h3>
-
-                  {analysisResult.caption && (
-                    <div className="mb-3">
-                      <span className="text-sm font-medium text-blue-700">
-                        图片描述：
-                      </span>
-                      <p className="text-sm text-gray-700 mt-1">
-                        {analysisResult.caption.text}
-                      </p>
-                    </div>
-                  )}
-
-                  {analysisResult.enhancedObjects &&
-                    analysisResult.enhancedObjects.length > 0 && (
-                      <div className="mb-3">
-                        <span className="text-sm font-medium text-purple-700">
-                          AI分析的物体及描写提示：
-                        </span>
-                        <div className="space-y-2 mt-2">
-                          {analysisResult.enhancedObjects
-                            .slice(0, 3)
-                            .map((obj: any, index: number) => (
-                              <div
-                                key={index}
-                                className="p-3 bg-white rounded-lg border border-purple-100"
-                              >
-                                <div className="flex items-center justify-between mb-1">
-                                  <span className="text-sm font-medium text-gray-800">
-                                    {obj.name} (id: {obj.id})
-                                  </span>
-                                  <span className="text-xs text-gray-500">
-                                    置信度: {Math.round(obj.confidence * 100)}%
-                                  </span>
-                                </div>
-                                <div className="text-xs text-gray-600 mb-1">
-                                  区域: x:{obj.boundingBox?.x}, y:
-                                  {obj.boundingBox?.y}, w:{obj.boundingBox?.w},
-                                  h:{obj.boundingBox?.h}
-                                </div>
-                                <div className="text-xs text-purple-700 bg-purple-50 p-2 rounded">
-                                  <strong>描写提示：</strong>
-                                  {obj.tip}
-                                </div>
-                              </div>
-                            ))}
-                        </div>
-                      </div>
-                    )}
-
-                  {analysisResult.tags && analysisResult.tags.length > 0 && (
-                    <div>
-                      <span className="text-sm font-medium text-green-700">
-                        相关标签：
-                      </span>
-                      <div className="flex flex-wrap gap-2 mt-1">
-                        {analysisResult.tags
-                          .slice(0, 6)
-                          .map((tag: any, index: number) => (
-                            <span
-                              key={index}
-                              className="px-2 py-1 bg-green-100 rounded-full text-xs text-green-800"
-                            >
-                              {tag.name}
-                            </span>
-                          ))}
-                      </div>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            </div>
-          )}
         </div>
       </div>
     </div>
