@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { getRandomQuestions } from "../util";
 import { generateFreeWritingQuestion } from "../action";
@@ -22,6 +22,8 @@ export default function FreeWritingQuestionForm({
   setAnswers: (answers: Record<string, string>) => void;
   handleGenerate: () => void;
 }) {
+  const [loading, setLoading] = useState(false);
+
   useEffect(() => {
     // 获取随机的三个问题
     const randomQuestions = getRandomQuestions(3);
@@ -118,11 +120,19 @@ export default function FreeWritingQuestionForm({
 
         {/* 生成按钮 */}
         <Button
-          onClick={handleGenerate}
+          onClick={async () => {
+            setLoading(true);
+            await handleGenerate();
+            setLoading(false);
+          }}
           disabled={questions.length === 0}
           className="w-full h-14 mt-12 bg-gradient-to-r from-[#FE5933] to-[#E54A2B] hover:from-[#E54A2B] hover:to-[#FE5933] text-white rounded-2xl font-bold text-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 flex items-center justify-center gap-2"
         >
-          <span>生成写作主题</span>
+          {loading ? (
+            <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+          ) : (
+            <span>生成写作主题</span>
+          )}
         </Button>
       </div>
     </div>
